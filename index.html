@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Camisas de futebol tailandesas sob encomenda. Escolha, personalize e peça pelo WhatsApp.">
+<meta property="og:title" content="NAZA Camisas Importadas"><meta property="og:description" content="Catálogo de camisas sob encomenda. Entrega em até 30 dias.">
+<meta property="og:image" content="https://arielinazario.github.io/catalogo/logo.png"><meta property="og:url" content="https://arielinazario.github.io/catalogo/"><meta property="og:type" content="website">
+<link rel="icon" href="logo.png"><link rel="apple-touch-icon" href="logo.png">
+<style>body{margin:0}img{max-width:100%}</style>
+</head><body>
+<title>NAZA Camisas Importadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#F6F1EA; --surface:#FFFCF7; --surface2:#EFE7DE; --ink:#2B0A0F; --muted:#76595D; --line:#E4D8CC;
+  --wine:#5E0810; --wine2:#3E050B; --wine-soft:#F1DEDF; --on-wine:#FFFCF7; --good:#5E0810;
+  --shadow:0 1px 2px rgba(62,5,11,.06),0 8px 24px rgba(62,5,11,.08);
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:0 120px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(140deg,#6E0A16 0%,#5E0810 50%,#3E050B 100%);color:#FFFCF7;border-radius:0 0 26px 26px;margin-inline:-16px;padding:18px 20px 26px}
+.hero::before{content:"";position:absolute;right:-90px;top:-70px;width:300px;height:300px;border-radius:50%;border:34px solid rgba(255,255,255,.07)}
+.hero::after{content:"";position:absolute;right:40px;bottom:-120px;width:220px;height:220px;border-radius:50%;border:2px solid rgba(255,255,255,.12)}
+.brandbar{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:46px;height:46px;border-radius:50%;background:#FFFFFF;padding:2px;box-shadow:0 0 0 2px rgba(255,252,247,.35)}
+.brand b{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:.05em;line-height:1;display:block}
+.brand span{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.85}
+.ig{color:#FFFFFF;font-size:13px;font-weight:600;text-decoration:none;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.hero h1{position:relative;z-index:1;font-family:var(--display);font-style:italic;font-weight:800;font-size:clamp(34px,9vw,60px);line-height:.92;letter-spacing:.005em;text-transform:uppercase;margin:16px 0 10px;max-width:12ch;text-wrap:balance}
+.hero p{position:relative;z-index:1;margin:0;max-width:46ch;opacity:.92;font-size:15px}
+.perks{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.perks span{font-size:12.5px;font-weight:600;background:rgba(255,255,255,.12);border-radius:999px;padding:5px 11px}
+
+/* filters */
+.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);padding-block:12px 8px;display:grid;gap:8px}
+.search{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 13px}
+.search:focus{outline:2px solid var(--wine);border-color:transparent}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;font-weight:600;font-size:13.5px;color:var(--muted);cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:var(--on-wine)}
+.count{font-size:13px;color:var(--muted);margin:4px 0 10px}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (min-width:640px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}}
+@media (min-width:920px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.card{background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);outline:1px solid var(--line);outline-offset:-1px;display:flex;flex-direction:column;border:0;padding:0;text-align:left;cursor:pointer;width:100%}
+.card:focus-visible,.btn:focus-visible,.chips button:focus-visible,.sz:focus-visible{outline:2px solid var(--wine);outline-offset:2px}
+.ph{position:relative;aspect-ratio:4/5;background:#FFFFFF;display:grid;place-items:center;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:contain}
+.ph svg{width:40%;height:40%;fill:none;stroke:#D8C8CB;stroke-width:1.3;stroke-linejoin:round}
+.tag{position:absolute;top:8px;left:8px;background:var(--wine);color:#FFFFFF;font-family:var(--display);font-weight:700;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px}
+.info{padding:10px 12px 12px;display:grid;gap:2px;flex:1}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--wine)}
+.team{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.1;text-transform:uppercase;letter-spacing:.02em}
+.model{font-size:13px;color:var(--muted)}
+.price{font-family:var(--display);font-weight:800;font-size:22px;margin-top:6px}
+.price small{font-family:var(--body);font-weight:500;font-size:12px;color:var(--muted);display:block;margin-top:-2px}
+.empty{text-align:center;padding:48px 16px;color:var(--muted)}
+
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.back{position:absolute;inset:0;background:rgba(46,6,12,.55)}
+.panel{position:relative;background:var(--surface);width:100%;max-width:560px;max-height:92%;overflow:auto;overflow-x:hidden;border-radius:22px 22px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+@media (prefers-reduced-motion:no-preference){.panel{animation:up .22s ease-out}@keyframes up{from{transform:translateY(24px)}}}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.phead h2{margin:0;font-family:var(--display);font-weight:800;font-size:24px;text-transform:uppercase;letter-spacing:.03em;line-height:1.05}
+.x{flex:none;border:0;background:var(--surface2);width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer}
+.pimg{width:100%;max-height:300px;aspect-ratio:1/1;object-fit:contain;background:#FFFFFF;border-radius:14px;display:block}
+.lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px;display:block}
+.sizes{display:flex;flex-wrap:wrap;gap:6px}
+.sz{min-width:52px;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 10px;font-weight:700;cursor:pointer}
+.sz[aria-pressed="true"]{border-color:var(--wine);background:var(--wine-soft);color:var(--wine)}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) 96px;gap:8px}
+.in{width:100%;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:11px 12px;min-width:0}
+.in:focus{outline:2px solid var(--wine);border-color:transparent}
+.note{font-size:12.5px;color:var(--muted);margin-top:6px}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-size:15px;width:100%}
+.btn.pri{background:var(--wine);color:var(--on-wine)}
+.btn.wa{background:var(--wine);color:#FFFFFF}
+.btn.ghost{background:var(--surface2);color:var(--ink)}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 10px}
+.total b{font-family:var(--display);font-size:26px}
+.line{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;padding-block:10px;border-bottom:1px solid var(--line)}
+.line img,.line .noimg{width:56px;height:64px;object-fit:contain;background:#FFFFFF;border-radius:8px}
+.line .t{font-weight:700;line-height:1.2}
+.line .d{font-size:12.5px;color:var(--muted)}
+.line .r{display:grid;justify-items:end;gap:4px}
+.rm{border:0;background:none;color:var(--muted);font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0}
+
+/* cart bar */
+.cartbar{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.cartbar button{max-width:560px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:16px;background:var(--wine);color:#FFFFFF;padding:14px 18px;font-weight:700;box-shadow:0 10px 30px rgba(94,8,16,.35);cursor:pointer}
+.cartbar .n{background:#FFFFFF;color:var(--wine);border-radius:999px;min-width:26px;height:26px;display:inline-grid;place-items:center;font-size:13px;margin-right:8px;padding:0 6px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;z-index:30;font-size:14px;max-width:calc(100% - 32px)}
+.foot{margin-top:28px;text-align:center;font-size:13px;color:var(--muted);display:grid;gap:4px}
+.foot a{color:var(--wine);font-weight:600}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="brandbar">
+      <div class="brand"><img src="data:image/webp;base64,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" alt="Logo NAZA"><div><b>NAZA</b><span>Camisas Importadas</span></div></div>
+      <a class="ig" href="https://instagram.com/arielinazario" target="_blank" rel="noopener">@arielinazario</a>
+    </div>
+    <h1>Vista a camisa do seu time</h1>
+    <p>Camisas tailandesas de primeira linha, sob encomenda. Escolha os modelos, veja a disponibilidade e feche tudo pelo WhatsApp.</p>
+    <div class="perks"><span>Entrega em até 30 dias</span><span>Nome e número +R$ 20</span><span>Patches sob consulta</span></div>
+  </header>
+
+  <div class="filters">
+    <input class="search" id="q" type="search" placeholder="Buscar time ou seleção" autocomplete="off" aria-label="Buscar time">
+    <div class="chips" id="fLiga" role="group" aria-label="Liga"></div>
+    <div class="chips" id="fCat" role="group" aria-label="Categoria"></div>
+  </div>
+  <div class="count" id="count"></div>
+  <main class="grid" id="grid"></main>
+  <div class="empty" id="empty" hidden></div>
+
+  <footer class="foot">
+    <div>NAZA Camisas Importadas · atendimento pelo WhatsApp</div>
+    <div>Catálogo atualizado em <span id="upd"></span></div>
+  </footer>
+</div>
+
+<div class="cartbar" id="cartbar" hidden><button type="button" id="openCart"><span><span class="n" id="cartN">0</span>Ver disponibilidade</span><span class="num" id="cartT"></span></button></div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="back" data-close></div>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="phead"><h2 id="sheetTitle"></h2><button class="x" type="button" data-close aria-label="Fechar">×</button></div>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const DATA = /*__DATA__*/{"atualizadoEm": 1790289300604, "whatsapp": "5548991245814", "instagram": "arielinazario", "persPreco": 20, "itens": []}/*__END__*/;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const brl = n => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const SHIRT = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3 4 6l2 4 2-1v12h8V9l2 1 2-4-4-3c-1 2-2.5 3-4 3S9 5 8 3z"/></svg>`;
+const PERS = Number(DATA.persPreco) || 20;
+const itens = (DATA.itens || []);
+let liga = "Todas", cat = "Todas", q = "";
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("naza.cart") || "[]").filter(c => itens.some(i => i.id === c.id)); } catch(e){ cart = []; }
+let perfil = {};
+try { perfil = JSON.parse(localStorage.getItem("naza.perfil") || "{}"); } catch(e){}
+const saveCart = () => { try { localStorage.setItem("naza.cart", JSON.stringify(cart)); } catch(e){} };
+function toast(m){ const t = $("#toast"); t.textContent = m; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => t.hidden = true, 2400); }
+const linePrice = c => (Number(c.preco)||0) + ((c.persNome || c.persNum) ? PERS : 0);
+const nomeItem = i => [i.time, i.modelo].filter(Boolean).join(" ");
+
+function chips(){
+  const ligas = ["Todas", ...[...new Set(itens.map(i => i.liga).filter(Boolean))]];
+  const cats = ["Todas", ...[...new Set(itens.map(i => i.categoria).filter(Boolean))]];
+  $("#fLiga").innerHTML = ligas.length > 2 ? ligas.map(l => `<button type="button" data-liga="${esc(l)}" aria-pressed="${l===liga}">${l==="Todas"?"Todas as ligas":esc(l)}</button>`).join("") : "";
+  $("#fCat").innerHTML = cats.length > 2 ? cats.map(c => `<button type="button" data-cat="${esc(c)}" aria-pressed="${c===cat}">${c==="Todas"?"Todas as categorias":esc(c)}</button>`).join("") : "";
+}
+function norm(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+function render(){
+  chips();
+  const nq = norm(q);
+  const vis = itens.filter(i => (liga === "Todas" || i.liga === liga) && (cat === "Todas" || i.categoria === cat) && (!nq || norm([i.time,i.modelo,i.liga].join(" ")).includes(nq)));
+  $("#grid").innerHTML = vis.map(i => `<button type="button" class="card" data-id="${esc(i.id)}">
+    <div class="ph">${i.foto ? `<img src="${esc(i.foto)}" alt="Camisa ${esc(nomeItem(i))}" loading="lazy">` : SHIRT}${i.destaque ? `<span class="tag">Destaque</span>` : ""}</div>
+    <div class="info"><span class="eyebrow">${esc(i.liga || i.categoria || "")}</span><span class="team">${esc(i.time)}</span><span class="model">${esc([i.modelo, i.categoria !== "Tradicional" ? i.categoria : ""].filter(Boolean).join(" · "))}</span>
+    <span class="price num">${brl(i.preco)}</span></div></button>`).join("");
+  $("#count").textContent = itens.length ? `${vis.length} modelo${vis.length===1?"":"s"}` : "";
+  const em = $("#empty");
+  if(!itens.length){ em.hidden = false; em.innerHTML = `O catálogo está sendo atualizado.<br><br><a class="btn wa" style="max-width:320px;margin:0 auto" href="https://wa.me/${esc(DATA.whatsapp)}" target="_blank" rel="noopener">Fale com a gente no WhatsApp</a>`; }
+  else if(!vis.length){ em.hidden = false; em.textContent = "Nenhuma camisa com esses filtros. Não achou seu time? Pergunte no WhatsApp que a gente busca."; }
+  else em.hidden = true;
+  const n = cart.length, tot = cart.reduce((a,c) => a + linePrice(c), 0);
+  $("#cartbar").hidden = !n; $("#cartN").textContent = n; $("#cartT").textContent = brl(tot);
+  $("#upd").textContent = DATA.atualizadoEm ? new Date(DATA.atualizadoEm).toLocaleDateString("pt-BR") : "—";
+}
+
+function openSheet(title, html){ $("#sheetTitle").textContent = title; $("#sheetBody").innerHTML = html; $("#sheet").hidden = false; document.body.style.overflow = "hidden"; }
+function closeSheet(){ $("#sheet").hidden = true; document.body.style.overflow = ""; }
+
+function openItem(id){
+  const i = itens.find(x => x.id === id); if(!i) return;
+  let tam = "";
+  openSheet(nomeItem(i), `
+    ${i.foto ? `<img class="pimg" src="${esc(i.foto)}" alt="Camisa ${esc(nomeItem(i))}">` : ""}
+    <div class="total" style="margin-top:12px"><span>${esc([i.liga, i.categoria].filter(Boolean).join(" · "))}</span><b class="num">${brl(i.preco)}</b></div>
+    ${i.descricao ? `<div class="note" style="margin-top:-4px">${esc(i.descricao)}</div>` : ""}
+    <span class="lbl">Tamanho</span>
+    <div class="sizes" id="sizes">${(i.tamanhos||[]).map(t => `<button type="button" class="sz" data-t="${esc(t)}" aria-pressed="false">${esc(t)}</button>`).join("") || `<span class="note">Consulte os tamanhos no WhatsApp.</span>`}</div>
+    <span class="lbl">Personalização (opcional, +${brl(PERS)})</span>
+    <div class="row2"><input class="in" id="pNome" placeholder="Nome" autocapitalize="characters" autocomplete="off" maxlength="14" aria-label="Nome na camisa"><input class="in" id="pNum" placeholder="Nº" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Número na camisa"></div>
+    <span class="lbl">Patch (opcional)</span>
+    <input class="in" id="pPatch" placeholder="Ex.: Libertadores, Champions League" autocomplete="off">
+    <div class="note">O valor do patch é confirmado junto com a disponibilidade.</div>
+    <div class="total"><span>Valor desta camisa</span><b class="num" id="lineT">${brl(i.preco)}</b></div>
+    <button type="button" class="btn pri" id="addBtn">Adicionar à minha lista</button>`);
+  const upd = () => { $("#lineT").textContent = brl((Number(i.preco)||0) + (($("#pNome").value.trim() || $("#pNum").value.trim()) ? PERS : 0)); };
+  $("#pNome").addEventListener("input", upd); $("#pNum").addEventListener("input", upd);
+  $("#sizes").addEventListener("click", e => { const b = e.target.closest(".sz"); if(!b) return; tam = b.dataset.t; $("#sizes").querySelectorAll(".sz").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+  $("#addBtn").addEventListener("click", () => {
+    if((i.tamanhos||[]).length && !tam){ toast("Escolha o tamanho."); return; }
+    cart.push({id:i.id, tamanho:tam, persNome:$("#pNome").value.trim().toUpperCase(), persNum:$("#pNum").value.replace(/\D/g,""), patch:$("#pPatch").value.trim(), preco:i.preco});
+    saveCart(); closeSheet(); render(); toast("Adicionada. Quando terminar, toque em Ver disponibilidade.");
+  });
+}
+
+function cartItemTxt(c){ const i = itens.find(x => x.id === c.id) || {}; return [c.tamanho ? "Tam: " + c.tamanho : "", c.persNome ? "Nome: " + c.persNome : "", c.persNum ? "Nº: " + c.persNum : "", c.patch ? "Patch: " + c.patch : "", i.categoria ? "Cat: " + i.categoria : "", "Preço: " + (Number(c.preco)||0).toFixed(2).replace(".",",")].filter(Boolean); }
+function montarMensagem(nome, wa){
+  const cod = "PP-" + String(Math.floor(1000 + Math.random()*9000));
+  const linhas = cart.map((c, k) => { const i = itens.find(x => x.id === c.id) || {}; return `${k+1}) ${nomeItem(i)} | ${cartItemTxt(c).join(" | ")}`; });
+  return `*PRÉ-PEDIDO NAZA* #${cod}\nNome: ${nome}\nWhatsApp: ${wa}\n${linhas.join("\n")}\n\nOlá! Gostaria de saber a disponibilidade dessas camisas.`;
+}
+function openCart(){
+  const tot = cart.reduce((a,c) => a + linePrice(c), 0);
+  openSheet("Minha lista", `
+    <div>${cart.map((c, k) => { const i = itens.find(x => x.id === c.id) || {}; return `<div class="line">${i.foto ? `<img src="${esc(i.foto)}" alt="">` : `<span class="noimg"></span>`}
+      <div><div class="t">${esc(nomeItem(i))}</div><div class="d">${esc([c.tamanho ? "Tam. " + c.tamanho : "", (c.persNome||c.persNum) ? [c.persNome, c.persNum].filter(Boolean).join(" ") : "", c.patch ? "Patch " + c.patch : ""].filter(Boolean).join(" · "))}</div></div>
+      <div class="r"><b class="num">${brl(linePrice(c))}</b><button type="button" class="rm" data-rm="${k}">Remover</button></div></div>`; }).join("")}</div>
+    <div class="total"><span>Total estimado</span><b class="num">${brl(tot)}</b></div>
+    <div class="note" style="margin-top:-6px">Patches com valor a confirmar. Nada é cobrado agora: primeiro confirmamos a disponibilidade.</div>
+    <span class="lbl">Seu nome</span><input class="in" id="cNome" autocomplete="name" value="${esc(perfil.nome||"")}" placeholder="Nome e sobrenome">
+    <span class="lbl">Seu WhatsApp</span><input class="in" id="cWa" inputmode="tel" autocomplete="tel" value="${esc(perfil.wa||"")}" placeholder="(48) 99999-9999">
+    <div style="height:14px"></div>
+    <a class="btn wa" id="sendWa" href="#" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+    <div style="height:8px"></div>
+    <button type="button" class="btn ghost" data-close>Continuar escolhendo</button>
+    <div style="height:8px"></div>
+    <button type="button" class="rm" id="clearCart" style="display:block;margin:6px auto 0">Esvaziar lista</button>`);
+  $("#clearCart").addEventListener("click", () => { cart = []; saveCart(); closeSheet(); render(); toast("Lista esvaziada."); });
+  $("#sendWa").addEventListener("click", e => {
+    const nome = $("#cNome").value.trim(), wa = $("#cWa").value.trim();
+    if(!nome || wa.replace(/\D/g,"").length < 10){ e.preventDefault(); toast("Informe seu nome e WhatsApp com DDD."); return; }
+    perfil = {nome, wa}; try { localStorage.setItem("naza.perfil", JSON.stringify(perfil)); } catch(err){}
+    e.currentTarget.href = `https://wa.me/${DATA.whatsapp}?text=${encodeURIComponent(montarMensagem(nome, wa))}`;
+    setTimeout(() => toast("Depois de enviar, é só aguardar nossa resposta no WhatsApp."), 600);
+  });
+}
+
+document.addEventListener("click", e => {
+  const t = e.target;
+  if(t.closest("[data-close]")){ closeSheet(); return; }
+  const l = t.closest("[data-liga]"); if(l){ liga = l.dataset.liga; render(); return; }
+  const c = t.closest("[data-cat]"); if(c){ cat = c.dataset.cat; render(); return; }
+  const card = t.closest(".card"); if(card){ openItem(card.dataset.id); return; }
+  const rm = t.closest("[data-rm]"); if(rm){ cart.splice(+rm.dataset.rm, 1); saveCart(); render(); if(cart.length) openCart(); else closeSheet(); return; }
+  if(t.closest("#openCart")){ openCart(); return; }
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("#sheet").hidden) closeSheet(); });
+$("#q").addEventListener("input", e => { q = e.target.value; render(); });
+render();
+</script>
+
+</body></html>
