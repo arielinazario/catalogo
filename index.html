@@ -108,6 +108,25 @@ button,input,select,textarea{font:inherit;color:inherit}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;z-index:30;font-size:14px;max-width:calc(100% - 32px)}
 .foot{margin-top:28px;text-align:center;font-size:13px;color:var(--muted);display:grid;gap:4px}
 .foot a{color:var(--wine);font-weight:600}
+
+/* medidas */
+.medidas{margin-top:40px;scroll-margin-top:150px;background:var(--surface);border-radius:20px;padding:20px 10px;box-shadow:var(--shadow);outline:1px solid var(--line);outline-offset:-1px}
+.mhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;border-bottom:2px solid var(--wine);padding-bottom:12px;margin-bottom:18px}
+.mhead .pill{background:var(--wine);color:#FFFCF7;font-family:var(--display);font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:6px 16px;font-size:15px}
+.mhead span{color:var(--wine);font-weight:600;font-size:14px}
+.medidas h3{font-family:var(--display);font-style:italic;font-weight:800;text-transform:uppercase;color:var(--wine);font-size:clamp(26px,7vw,40px);line-height:1;margin:18px 0 10px}
+.medidas h3 small{font-style:italic;color:var(--ink);font-size:.55em;margin-left:6px}
+.tbl{overflow-x:auto;border-radius:12px;border:1.5px solid var(--wine)}
+.tbl table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.tbl th{background:var(--wine2);color:#FFFCF7;font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:12.5px;letter-spacing:.02em;padding:10px 5px;line-height:1.15}
+.tbl th i{font-style:normal;text-transform:none}
+.tbl td{font-family:var(--display);font-weight:600;font-size:15px;text-align:center;padding:9px 4px;border-left:1px solid var(--line);white-space:nowrap}
+.tbl td:first-child{border-left:0;color:var(--wine);font-weight:800}
+.tbl td:first-child small{display:block;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em}
+.tbl tr:nth-child(even) td{background:var(--surface2)}
+.obs{font-size:13.5px;margin-top:8px}
+.obs b{font-family:var(--display);color:var(--wine);letter-spacing:.06em;text-transform:uppercase}
+.linkmed{background:none;border:0;padding:0;color:var(--wine);font-weight:600;font-size:13px;text-decoration:underline;cursor:pointer;margin-left:8px}
 </style>
 
 <div class="wrap">
@@ -139,6 +158,33 @@ button,input,select,textarea{font:inherit;color:inherit}
   <main class="grid" id="grid"></main>
   <div class="empty" id="empty" hidden></div>
 
+  <section class="medidas" id="medidas" aria-labelledby="medTitle">
+    <div class="mhead"><div class="pill" id="medTitle">Tabela de medidas</div><span>Confira antes de fazer seu pedido</span></div>
+    <h3>Versão torcedor <small>masculino</small></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Tamanho</th><th>Compri&shy;mento <i>(cm)</i></th><th>Largura <i>(cm)</i></th><th>Altura <i>(cm)</i></th><th>Peso <i>(kg)</i></th></tr></thead>
+      <tbody>
+        <tr><td>P<small>S</small></td><td>69-71</td><td>53-55</td><td>162-170</td><td>50-62</td></tr>
+        <tr><td>M<small>M</small></td><td>71-73</td><td>55-57</td><td>170-176</td><td>62-78</td></tr>
+        <tr><td>G<small>L</small></td><td>73-75</td><td>57-58</td><td>176-182</td><td>78-83</td></tr>
+        <tr><td>GG<small>XL</small></td><td>75-78</td><td>58-60</td><td>182-190</td><td>83-90</td></tr>
+        <tr><td>XGG<small>2XL</small></td><td>78-81</td><td>60-62</td><td>190-195</td><td>90-97</td></tr>
+      </tbody></table></div>
+    <p class="obs"><b>Observação:</b> pode haver variação de 1 a 3 cm devido à elasticidade do tecido.</p>
+    <h3>Tabela infantil <small style="text-transform:none">(cm)</small></h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Tamanho</th><th>Idade</th><th>Altura</th><th>Compri&shy;mento</th><th>Peito</th><th>Compr. do short</th><th>Cintura</th></tr></thead>
+      <tbody>
+        <tr><td>16</td><td>2-4</td><td>90-105</td><td>44</td><td>35</td><td>32</td><td>20-37</td></tr>
+        <tr><td>18</td><td>4-5</td><td>105-115</td><td>47</td><td>37</td><td>34</td><td>21-39</td></tr>
+        <tr><td>20</td><td>5-6</td><td>115-125</td><td>50</td><td>39</td><td>36</td><td>22-41</td></tr>
+        <tr><td>22</td><td>7-8</td><td>125-135</td><td>53</td><td>41</td><td>38</td><td>23-42</td></tr>
+        <tr><td>24</td><td>8-9</td><td>135-145</td><td>56</td><td>43</td><td>39</td><td>24-44</td></tr>
+        <tr><td>26</td><td>10-11</td><td>145-155</td><td>59</td><td>45</td><td>40</td><td>25-47</td></tr>
+        <tr><td>28</td><td>12-13</td><td>155-165</td><td>62</td><td>47</td><td>43</td><td>26-50</td></tr>
+      </tbody></table></div>
+  </section>
+
   <footer class="foot">
     <div>NAZA Camisas Importadas · atendimento pelo WhatsApp</div>
     <div>Catálogo atualizado em <span id="upd"></span></div>
@@ -157,7 +203,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 <div class="toast" id="toast" hidden></div>
 
 <script>
-const DATA = /*__DATA__*/{"atualizadoEm": 1790298127069, "whatsapp": "5548991245814", "instagram": "arielinazario", "persPreco": 20, "itens": [{"id": "mug93hsoi3chw", "time": "Flamengo", "modelo": "2026 Home", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/1d9663532c10c39a5f1fac959a9bfdfe.jpg"}, {"id": "mug94mey2hxfu", "time": "Fluminense", "modelo": "2026 Home", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/81fbc2462e139d58a6f9818bf5c879c1.jpg"}, {"id": "mug93veyl4pda", "time": "Palmeiras", "modelo": "2026 Home", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/9e0a9641adaee2f309854150f70c3357.jpg"}, {"id": "mug7ap0vbcjuv", "time": "Argentina", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/a76ec5306e0bd00dda5d38808eed67a3.jpg"}, {"id": "mug74hfnups9n", "time": "Brasil", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/1ed3738318a73e6cacc0bdf82a1944b7.jpg"}, {"id": "mug930g5im4tu", "time": "Flamengo", "modelo": "2026 Away", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/4d1ba9a46091ae159ff27d4399ca1017.jpg"}, {"id": "mug954pkqco8n", "time": "Fluminense", "modelo": "2026 Away", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/81c4a7fde644d191edc4e90c9ce2a28e.jpg"}, {"id": "mug95iprk452m", "time": "Palmeiras", "modelo": "2026 Away", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/b12a5247bac0f98835dc91ca3fa35cbf.jpg"}, {"id": "mug79liwrlzdd", "time": "Argentina", "modelo": "2006 Home", "liga": "Retrôs", "categoria": "Retrô", "preco": 159.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/6d52c3cf666fa08e41aa73ef8a5b7139.jpg"}, {"id": "mug774ox6ci3r", "time": "Brasil", "modelo": "2002 Home", "liga": "Retrôs", "categoria": "Retrô manga longa", "preco": 179.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "", "destaque": false, "foto": "img/30f8c7291302d2322c060157d01016f4.jpg"}, {"id": "mug901b4i9hdc", "time": "Espanha", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Manga longa", "preco": 139.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/41d9555f6ad28f9ea2c6bde5ab9dc8e6.jpg"}, {"id": "mug91epydtqwu", "time": "Espanha", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/897eebdd211a30327a19a293ff3eb041.jpg"}, {"id": "mug920naqbbez", "time": "Espanha", "modelo": "2026 Special Edition", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor. Edição especial.", "destaque": false, "foto": "img/60bbb9aec7474417035d8152005f6e6a.jpg"}]}/*__END__*/;
+const DATA = /*__DATA__*/{"atualizadoEm": 1790299140538, "whatsapp": "5548991245814", "instagram": "arielinazario", "persPreco": 20, "itens": [{"id": "mug93hsoi3chw", "time": "Flamengo", "modelo": "2026 Home", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/1d9663532c10c39a5f1fac959a9bfdfe.jpg"}, {"id": "mug94mey2hxfu", "time": "Fluminense", "modelo": "2026 Home", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/81fbc2462e139d58a6f9818bf5c879c1.jpg"}, {"id": "mug93veyl4pda", "time": "Palmeiras", "modelo": "2026 Home", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/9e0a9641adaee2f309854150f70c3357.jpg"}, {"id": "mug7ap0vbcjuv", "time": "Argentina", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/a76ec5306e0bd00dda5d38808eed67a3.jpg"}, {"id": "mug74hfnups9n", "time": "Brasil", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/1ed3738318a73e6cacc0bdf82a1944b7.jpg"}, {"id": "mug930g5im4tu", "time": "Flamengo", "modelo": "2026 Away", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/4d1ba9a46091ae159ff27d4399ca1017.jpg"}, {"id": "mug954pkqco8n", "time": "Fluminense", "modelo": "2026 Away", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/81c4a7fde644d191edc4e90c9ce2a28e.jpg"}, {"id": "mug95iprk452m", "time": "Palmeiras", "modelo": "2026 Away", "liga": "Brasileirão", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/b12a5247bac0f98835dc91ca3fa35cbf.jpg"}, {"id": "mug79liwrlzdd", "time": "Argentina", "modelo": "2006 Home", "liga": "Seleções", "categoria": "Retrô", "preco": 159.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/6d52c3cf666fa08e41aa73ef8a5b7139.jpg"}, {"id": "mug774ox6ci3r", "time": "Brasil", "modelo": "2002 Home", "liga": "Seleções", "categoria": "Retrô manga longa", "preco": 179.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "", "destaque": false, "foto": "img/30f8c7291302d2322c060157d01016f4.jpg"}, {"id": "mug901b4i9hdc", "time": "Espanha", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Manga longa", "preco": 139.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/41d9555f6ad28f9ea2c6bde5ab9dc8e6.jpg"}, {"id": "mug91epydtqwu", "time": "Espanha", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/897eebdd211a30327a19a293ff3eb041.jpg"}, {"id": "mug920naqbbez", "time": "Espanha", "modelo": "2026 Special Edition", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor. Edição especial.", "destaque": false, "foto": "img/60bbb9aec7474417035d8152005f6e6a.jpg"}]}/*__END__*/;
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const brl = n => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
@@ -174,9 +220,12 @@ function toast(m){ const t = $("#toast"); t.textContent = m; t.hidden = false; c
 const linePrice = c => (Number(c.preco)||0) + ((c.persNome || c.persNum) ? PERS : 0);
 const nomeItem = i => [i.time, i.modelo].filter(Boolean).join(" ");
 
+const grupo = c => /^retr/i.test(c||"") ? "Retrôs" : (c||"");
 function chips(){
-  const ligas = ["Todas", ...[...new Set(itens.map(i => i.liga).filter(Boolean))]];
-  const cats = ["Todas", ...[...new Set(itens.map(i => i.categoria).filter(Boolean))]];
+  const OL = ["Brasileirão","Premier League","La Liga","Serie A","Bundesliga","Ligue 1","Liga Portugal","Seleções","Outros"];
+  const ligas = ["Todas", ...[...new Set(itens.map(i => i.liga).filter(l => l && !/^retr/i.test(l)))].sort((a,b) => ((OL.indexOf(a)+99)%99) - ((OL.indexOf(b)+99)%99))];
+  const ORDEM = ["Tradicional","Manga longa","Retrôs","Kit infantil","Shorts"];
+  const cats = ["Todas", ...[...new Set(itens.map(i => grupo(i.categoria)).filter(Boolean))].sort((a,b) => (ORDEM.indexOf(a)+99)%99 - (ORDEM.indexOf(b)+99)%99)];
   $("#fLiga").innerHTML = ligas.length > 2 ? ligas.map(l => `<button type="button" data-liga="${esc(l)}" aria-pressed="${l===liga}">${l==="Todas"?"Todas as ligas":esc(l)}</button>`).join("") : "";
   $("#fCat").innerHTML = cats.length > 2 ? cats.map(c => `<button type="button" data-cat="${esc(c)}" aria-pressed="${c===cat}">${c==="Todas"?"Todas as categorias":esc(c)}</button>`).join("") : "";
 }
@@ -184,7 +233,7 @@ function norm(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[
 function render(){
   chips();
   const nq = norm(q);
-  const vis = itens.filter(i => (liga === "Todas" || i.liga === liga) && (cat === "Todas" || i.categoria === cat) && (!nq || norm([i.time,i.modelo,i.liga].join(" ")).includes(nq)));
+  const vis = itens.filter(i => (liga === "Todas" || i.liga === liga) && (cat === "Todas" || grupo(i.categoria) === cat) && (!nq || norm([i.time,i.modelo,i.liga].join(" ")).includes(nq)));
   $("#grid").innerHTML = vis.map(i => `<button type="button" class="card" data-id="${esc(i.id)}">
     <div class="ph">${i.foto ? `<img src="${esc(i.foto)}" alt="Camisa ${esc(nomeItem(i))}" loading="lazy">` : SHIRT}${i.destaque ? `<span class="tag">Destaque</span>` : ""}</div>
     <div class="info"><span class="eyebrow">${esc(i.liga || i.categoria || "")}</span><span class="team">${esc(i.time)}</span><span class="model">${esc([i.modelo, i.categoria !== "Tradicional" ? i.categoria : ""].filter(Boolean).join(" · "))}</span>
@@ -209,7 +258,7 @@ function openItem(id){
     ${i.foto ? `<img class="pimg" src="${esc(i.foto)}" alt="Camisa ${esc(nomeItem(i))}">` : ""}
     <div class="total" style="margin-top:12px"><span>${esc([i.liga, i.categoria].filter(Boolean).join(" · "))}</span><b class="num">${brl(i.preco)}</b></div>
     ${i.descricao ? `<div class="note" style="margin-top:-4px">${esc(i.descricao)}</div>` : ""}
-    <span class="lbl">Tamanho</span>
+    <span class="lbl">Tamanho <button type="button" class="linkmed" data-med>Ver tabela de medidas</button></span>
     <div class="sizes" id="sizes">${(i.tamanhos||[]).map(t => `<button type="button" class="sz" data-t="${esc(t)}" aria-pressed="false">${esc(t)}</button>`).join("") || `<span class="note">Consulte os tamanhos no WhatsApp.</span>`}</div>
     <span class="lbl">Personalização (opcional, +${brl(PERS)})</span>
     <div class="row2"><input class="in" id="pNome" placeholder="Nome" autocapitalize="characters" autocomplete="off" maxlength="14" aria-label="Nome na camisa"><input class="in" id="pNum" placeholder="Nº" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Número na camisa"></div>
@@ -265,6 +314,7 @@ function openCart(){
 
 document.addEventListener("click", e => {
   const t = e.target;
+  if(t.closest("[data-med]")){ closeSheet(); document.getElementById("medidas").scrollIntoView({behavior:"smooth"}); return; }
   if(t.closest("[data-close]")){ closeSheet(); return; }
   const l = t.closest("[data-liga]"); if(l){ liga = l.dataset.liga; render(); return; }
   const c = t.closest("[data-cat]"); if(c){ cat = c.dataset.cat; render(); return; }
