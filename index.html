@@ -86,6 +86,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .in{width:100%;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:11px 12px;min-width:0}
 .in:focus{outline:2px solid var(--wine);border-color:transparent}
 .note{font-size:12.5px;color:var(--muted);margin-top:6px}
+.brk{margin-top:14px;display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.brk div{display:flex;justify-content:space-between}
 .btn{border:0;border-radius:14px;padding:13px 16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-size:15px;width:100%}
 .btn.pri{background:var(--wine);color:var(--on-wine)}
 .btn.wa{background:var(--wine);color:#FFFFFF}
@@ -155,7 +157,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 <div class="toast" id="toast" hidden></div>
 
 <script>
-const DATA = /*__DATA__*/{"atualizadoEm": 1790294876324, "whatsapp": "5548991245814", "instagram": "arielinazario", "persPreco": 20, "itens": [{"id": "mug7ap0vbcjuv", "time": "Argentina", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/a76ec5306e0bd00dda5d38808eed67a3.jpg"}, {"id": "mug74hfnups9n", "time": "Brasil", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/1ed3738318a73e6cacc0bdf82a1944b7.jpg"}, {"id": "mug79liwrlzdd", "time": "Argentina", "modelo": "2006 Retrô", "liga": "Retrôs", "categoria": "Retrô", "preco": 159.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/6d52c3cf666fa08e41aa73ef8a5b7139.jpg"}, {"id": "mug774ox6ci3r", "time": "Brasil", "modelo": "2002 Home Retrô", "liga": "Retrôs", "categoria": "Retrô manga longa", "preco": 179.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "", "destaque": false, "foto": "img/30f8c7291302d2322c060157d01016f4.jpg"}]}/*__END__*/;
+const DATA = /*__DATA__*/{"atualizadoEm": 1790296953907, "whatsapp": "5548991245814", "instagram": "arielinazario", "persPreco": 20, "itens": [{"id": "mug7ap0vbcjuv", "time": "Argentina", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/a76ec5306e0bd00dda5d38808eed67a3.jpg"}, {"id": "mug74hfnups9n", "time": "Brasil", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/1ed3738318a73e6cacc0bdf82a1944b7.jpg"}, {"id": "mug79liwrlzdd", "time": "Argentina", "modelo": "2006 Retrô", "liga": "Retrôs", "categoria": "Retrô", "preco": 159.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/6d52c3cf666fa08e41aa73ef8a5b7139.jpg"}, {"id": "mug774ox6ci3r", "time": "Brasil", "modelo": "2002 Home Retrô", "liga": "Retrôs", "categoria": "Retrô manga longa", "preco": 179.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "", "destaque": false, "foto": "img/30f8c7291302d2322c060157d01016f4.jpg"}]}/*__END__*/;
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const brl = n => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
@@ -214,9 +216,12 @@ function openItem(id){
     <span class="lbl">Patch (opcional)</span>
     <input class="in" id="pPatch" placeholder="Ex.: Libertadores, Champions League" autocomplete="off">
     <div class="note">O valor do patch é confirmado junto com a disponibilidade.</div>
+    <div class="brk num" id="brk"></div>
     <div class="total"><span>Valor desta camisa</span><b class="num" id="lineT">${brl(i.preco)}</b></div>
     <button type="button" class="btn pri" id="addBtn">Adicionar à minha lista</button>`);
-  const upd = () => { $("#lineT").textContent = brl((Number(i.preco)||0) + (($("#pNome").value.trim() || $("#pNum").value.trim()) ? PERS : 0)); };
+  const upd = () => { const tem = $("#pNome").value.trim() || $("#pNum").value.trim(); $("#lineT").textContent = brl((Number(i.preco)||0) + (tem ? PERS : 0));
+    $("#brk").innerHTML = `<div><span>Camisa</span><span>${brl(i.preco)}</span></div>${tem ? `<div><span>Personalização</span><span>${brl(PERS)}</span></div>` : ""}${$("#pPatch").value.trim() ? `<div><span>Patch</span><span>a confirmar</span></div>` : ""}`; };
+  $("#pPatch").addEventListener("input", upd); upd();
   $("#pNome").addEventListener("input", upd); $("#pNum").addEventListener("input", upd);
   $("#sizes").addEventListener("click", e => { const b = e.target.closest(".sz"); if(!b) return; tam = b.dataset.t; $("#sizes").querySelectorAll(".sz").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
   $("#addBtn").addEventListener("click", () => {
@@ -226,7 +231,7 @@ function openItem(id){
   });
 }
 
-function cartItemTxt(c){ const i = itens.find(x => x.id === c.id) || {}; return [c.tamanho ? "Tam: " + c.tamanho : "", c.persNome ? "Nome: " + c.persNome : "", c.persNum ? "Nº: " + c.persNum : "", c.patch ? "Patch: " + c.patch : "", i.categoria ? "Cat: " + i.categoria : "", "Preço: " + (Number(c.preco)||0).toFixed(2).replace(".",",")].filter(Boolean); }
+function cartItemTxt(c){ const i = itens.find(x => x.id === c.id) || {}; return [c.tamanho ? "Tam: " + c.tamanho : "", c.persNome ? "Nome: " + c.persNome : "", c.persNum ? "Nº: " + c.persNum : "", c.patch ? "Patch: " + c.patch : "", i.categoria ? "Cat: " + i.categoria : "", "Preço: " + (Number(c.preco)||0).toFixed(2).replace(".",","), (c.persNome||c.persNum) ? "Pers: " + PERS.toFixed(2).replace(".",",") : ""].filter(Boolean); }
 function montarMensagem(nome, wa){
   const cod = "PP-" + String(Math.floor(1000 + Math.random()*9000));
   const linhas = cart.map((c, k) => { const i = itens.find(x => x.id === c.id) || {}; return `${k+1}) ${nomeItem(i)} | ${cartItemTxt(c).join(" | ")}`; });
@@ -236,7 +241,7 @@ function openCart(){
   const tot = cart.reduce((a,c) => a + linePrice(c), 0);
   openSheet("Minha lista", `
     <div>${cart.map((c, k) => { const i = itens.find(x => x.id === c.id) || {}; return `<div class="line">${i.foto ? `<img src="${esc(i.foto)}" alt="">` : `<span class="noimg"></span>`}
-      <div><div class="t">${esc(nomeItem(i))}</div><div class="d">${esc([c.tamanho ? "Tam. " + c.tamanho : "", (c.persNome||c.persNum) ? [c.persNome, c.persNum].filter(Boolean).join(" ") : "", c.patch ? "Patch " + c.patch : ""].filter(Boolean).join(" · "))}</div></div>
+      <div><div class="t">${esc(nomeItem(i))}</div><div class="d">${esc(c.tamanho ? "Tam. " + c.tamanho : "")} · Camisa ${brl(c.preco)}</div>${(c.persNome||c.persNum) ? `<div class="d">+ Personalização ${esc([c.persNome, c.persNum].filter(Boolean).join(" "))} · ${brl(PERS)}</div>` : ""}${c.patch ? `<div class="d">+ Patch ${esc(c.patch)} · a confirmar</div>` : ""}</div>
       <div class="r"><b class="num">${brl(linePrice(c))}</b><button type="button" class="rm" data-rm="${k}">Remover</button></div></div>`; }).join("")}</div>
     <div class="total"><span>Total estimado</span><b class="num">${brl(tot)}</b></div>
     <div class="note" style="margin-top:-6px">Patches com valor a confirmar. Nada é cobrado agora: primeiro confirmamos a disponibilidade.</div>
