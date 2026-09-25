@@ -58,7 +58,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .card{background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);outline:1px solid var(--line);outline-offset:-1px;display:flex;flex-direction:column;border:0;padding:0;text-align:left;cursor:pointer;width:100%}
 .card:focus-visible,.btn:focus-visible,.chips button:focus-visible,.sz:focus-visible{outline:2px solid var(--wine);outline-offset:2px}
 .ph{position:relative;aspect-ratio:4/5;background:#FFFFFF;display:grid;place-items:center;overflow:hidden}
-.ph img{width:100%;height:100%;object-fit:contain}
+.ph img{width:100%;height:100%;object-fit:cover}
 .ph svg{width:40%;height:40%;fill:none;stroke:#D8C8CB;stroke-width:1.3;stroke-linejoin:round}
 .tag{position:absolute;top:8px;left:8px;background:var(--wine);color:#FFFFFF;font-family:var(--display);font-weight:700;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px}
 .info{padding:10px 12px 12px;display:grid;gap:2px;flex:1}
@@ -155,7 +155,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 <div class="toast" id="toast" hidden></div>
 
 <script>
-const DATA = /*__DATA__*/{"atualizadoEm": 1790292700628, "whatsapp": "5548991245814", "instagram": "arielinazario", "persPreco": 20, "itens": []}/*__END__*/;
+const DATA = /*__DATA__*/{"atualizadoEm": 1790294876324, "whatsapp": "5548991245814", "instagram": "arielinazario", "persPreco": 20, "itens": [{"id": "mug7ap0vbcjuv", "time": "Argentina", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/a76ec5306e0bd00dda5d38808eed67a3.jpg"}, {"id": "mug74hfnups9n", "time": "Brasil", "modelo": "2026 Home", "liga": "Seleções", "categoria": "Tradicional", "preco": 119.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": true, "foto": "img/1ed3738318a73e6cacc0bdf82a1944b7.jpg"}, {"id": "mug79liwrlzdd", "time": "Argentina", "modelo": "2006 Retrô", "liga": "Retrôs", "categoria": "Retrô", "preco": 159.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "Versão torcedor", "destaque": false, "foto": "img/6d52c3cf666fa08e41aa73ef8a5b7139.jpg"}, {"id": "mug774ox6ci3r", "time": "Brasil", "modelo": "2002 Home Retrô", "liga": "Retrôs", "categoria": "Retrô manga longa", "preco": 179.9, "tamanhos": ["P", "M", "G", "GG", "XGG"], "descricao": "", "destaque": false, "foto": "img/30f8c7291302d2322c060157d01016f4.jpg"}]}/*__END__*/;
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const brl = n => (Number(n)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
