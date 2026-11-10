@@ -197,6 +197,32 @@ button,input,select,textarea{font:inherit;color:inherit}
     <div class="perks"><span>Pronta entrega e sob encomenda</span><span>Personalização com nome e número</span><span>Patches sob consulta</span></div>
   </header>
 
+  
+<style>
+.boxretro{display:flex;align-items:center;gap:18px;margin:16px 0 4px;padding:18px 22px;border-radius:20px;
+  background:linear-gradient(135deg,#f6f1e9,#efe6d6);border:2px solid #c69e5c;text-decoration:none;
+  box-shadow:0 10px 30px rgba(60,10,20,.28);transition:transform .15s ease,box-shadow .15s ease;position:relative;overflow:hidden}
+.boxretro:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(60,10,20,.34)}
+.boxretro .br-tag{position:absolute;top:0;left:0;background:#6e1222;color:#f6f1e9;font:800 12px/1 system-ui,sans-serif;
+  letter-spacing:.12em;padding:7px 14px;border-bottom-right-radius:14px}
+.boxretro .br-main{flex:1;min-width:0;padding-top:10px}
+.boxretro .br-title{display:block;color:#6e1222;font:800 24px/1.05 system-ui,sans-serif;letter-spacing:.01em}
+.boxretro .br-sub{display:block;color:#5a3a3f;font:600 14.5px/1.35 system-ui,sans-serif;margin-top:5px}
+.boxretro .br-sub b{color:#8c1a2c}
+.boxretro .br-cta{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
+.boxretro .br-price{color:#6e1222;font:800 30px/1 system-ui,sans-serif;white-space:nowrap}
+.boxretro .br-price small{font-size:15px;font-weight:700;color:#8c1a2c}
+.boxretro .br-btn{background:#6e1222;color:#f6f1e9;font:800 15px/1 system-ui,sans-serif;letter-spacing:.04em;
+  padding:13px 20px;border-radius:30px;white-space:nowrap}
+@media(max-width:620px){
+  .boxretro{flex-direction:column;align-items:stretch;text-align:center;gap:12px;padding:20px 18px 18px}
+  .boxretro .br-main{padding-top:16px}
+  .boxretro .br-cta{flex-direction:row;justify-content:center;gap:16px}
+  .boxretro .br-title{font-size:21px}
+}
+</style>
+  <button type="button" class="boxretro" id="bxOpen" aria-label="Assinar o Box Retro"><span class="br-tag">🎁 NOVIDADE</span><span class="br-main"><b class="br-title">BOX RETRÔ · Assinatura mensal</b><span class="br-sub">Todo mês uma camisa retrô personalizada e <b>surpresa</b> — você só descobre quando abrir 🔥</span></span><span class="br-cta"><span class="br-price">R$199<small>/mês</small></span><span class="br-btn">QUERO ASSINAR ›</span></span></button>
+
   <div class="tabs" id="tabs" role="tablist">
     <button type="button" role="tab" data-aba="estoque" aria-selected="false">Pronta entrega<small>Já no Brasil, envio imediato</small></button>
     <button type="button" role="tab" data-aba="catalogo" aria-selected="false">Catálogo<small>Sob encomenda</small></button>
@@ -505,6 +531,106 @@ $("#q").addEventListener("input", e => { q = e.target.value; render(); });
 let _rsz; window.addEventListener("resize", () => { clearTimeout(_rsz); _rsz = setTimeout(render, 150); });
 render();
 </script>
+
+
+<style>
+#bxModal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;
+  background:rgba(40,8,16,.55);backdrop-filter:blur(3px)}
+#bxModal.on{display:flex}
+#bxModal *{box-sizing:border-box}
+.bxcard{background:#f6f1e9;width:100%;max-width:470px;max-height:92vh;overflow:auto;border-radius:22px;
+  border:2px solid #c69e5c;box-shadow:0 24px 60px rgba(40,8,16,.5);padding:22px 22px 24px;position:relative;
+  font-family:system-ui,-apple-system,sans-serif;color:#3a2024}
+.bxcard h2{margin:2px 0 2px;color:#6e1222;font-size:23px;letter-spacing:.01em}
+.bxcard .bxsub{margin:0 0 14px;color:#8c1a2c;font-weight:600;font-size:14px}
+.bxclose{position:absolute;top:12px;right:14px;border:0;background:none;font-size:26px;line-height:1;color:#8c1a2c;cursor:pointer}
+.bxf{display:block;margin:10px 0 2px;font-weight:700;font-size:13px;color:#6e1222}
+.bxcard input,.bxcard select{width:100%;padding:12px 13px;border:1.5px solid #d9cdb8;border-radius:12px;
+  font-size:15px;background:#fff;color:#3a2024;font-family:inherit}
+.bxrow{display:flex;gap:10px}.bxrow>div{flex:1}
+.bxchk{display:flex;gap:9px;align-items:flex-start;margin:14px 0 4px;font-size:13px;color:#5a3a3f;line-height:1.35}
+.bxchk input{width:auto;margin-top:2px}
+.bxgo{width:100%;margin-top:16px;padding:15px;border:0;border-radius:30px;background:#6e1222;color:#f6f1e9;
+  font-weight:800;font-size:16px;letter-spacing:.03em;cursor:pointer}
+.bxgo:disabled{opacity:.5;cursor:not-allowed}
+.bxerr{color:#b3261e;font-size:13px;font-weight:600;margin-top:8px;min-height:1px}
+.bxnote{font-size:12px;color:#8a6f73;margin-top:10px;text-align:center}
+.bxstep2{text-align:center}
+.bxstep2 .bxbig{font-size:46px;margin:4px 0}
+.bxstep2 p{color:#5a3a3f;font-size:14.5px;line-height:1.4}
+.bxpay{display:block;margin:14px 0 8px;padding:15px;border-radius:30px;background:#009ee3;color:#fff;
+  font-weight:800;font-size:16px;text-decoration:none}
+.bxwa{display:block;margin:8px 0;padding:14px;border-radius:30px;background:#25d366;color:#fff;
+  font-weight:800;font-size:15px;text-decoration:none}
+</style>
+<div id="bxModal" role="dialog" aria-modal="true" aria-label="Assinatura Box Retro">
+  <div class="bxcard">
+    <button type="button" class="bxclose" id="bxX" aria-label="Fechar">&times;</button>
+    <div id="bxS1">
+      <h2>Box Retrô &middot; Assinatura mensal</h2>
+      <p class="bxsub">R$199/mês &middot; uma camisa retrô personalizada surpresa todo mês</p>
+      <form id="bxForm" novalidate>
+        <label class="bxf">Nome completo</label>
+        <input id="bxNome" autocomplete="name" placeholder="Seu nome">
+        <label class="bxf">WhatsApp (com DDD)</label>
+        <input id="bxWhats" inputmode="tel" autocomplete="tel" placeholder="(48) 99999-9999">
+        <div class="bxrow">
+          <div><label class="bxf">CEP</label><input id="bxCep" inputmode="numeric" autocomplete="postal-code" placeholder="88000-000"></div>
+          <div><label class="bxf">Tamanho</label>
+            <select id="bxTam"><option value="">Escolher</option>
+              <option>P</option><option>M</option><option>G</option><option>GG</option><option>XGG</option><option>XXGG</option></select></div>
+        </div>
+        <label class="bxf">Endereço (rua, número, bairro)</label>
+        <input id="bxEnd" autocomplete="street-address" placeholder="Rua Exemplo, 123, Centro">
+        <label class="bxf">Cidade / UF</label>
+        <input id="bxCid" placeholder="Sua cidade / SC">
+        <label class="bxf">Time do coração</label>
+        <input id="bxTime" placeholder="Ex.: Flamengo, Real Madrid...">
+        <label class="bxchk"><input type="checkbox" id="bxOk">
+          <span>Entendi que a box é <b>surpresa e personalizada</b> (eu escolho o modelo e o craque), a cobrança é <b>mensal de R$199 no cartão</b>, e que por ser personalizada <b>não há troca por arrependimento</b> (só por defeito ou erro de tamanho nosso).</span></label>
+        <div class="bxerr" id="bxErr"></div>
+        <button type="submit" class="bxgo" id="bxGo">Continuar para o pagamento</button>
+        <p class="bxnote">O tamanho é obrigatório para a camisa servir. Seus dados vão para a loja confirmar o pedido.</p>
+      </form>
+    </div>
+    <div id="bxS2" class="bxstep2" style="display:none">
+      <div class="bxbig">&#127881;</div>
+      <h2>Quase lá!</h2>
+      <p>Falta confirmar 2 passos rápidos:</p>
+      <a class="bxwa" id="bxWA" href="#" target="_blank" rel="noopener">1 &middot; Enviar meus dados no WhatsApp</a>
+      <a class="bxpay" id="bxPay" href="https://mpago.la/2fjaZia" target="_blank" rel="noopener">2 &middot; Ativar assinatura (R$199/mês)</a>
+      <p class="bxnote">A assinatura só começa depois que a loja confirmar seu tamanho e time. Qualquer dúvida, chama no WhatsApp.</p>
+    </div>
+  </div>
+</div>
+<script>(function(){
+  var M=document.getElementById('bxModal'),open=document.getElementById('bxOpen'),
+      X=document.getElementById('bxX'),F=document.getElementById('bxForm'),
+      S1=document.getElementById('bxS1'),S2=document.getElementById('bxS2'),
+      WA=document.getElementById('bxWA'),ERR=document.getElementById('bxErr');
+  function show(){M.classList.add('on');document.body.style.overflow='hidden';}
+  function hide(){M.classList.remove('on');document.body.style.overflow='';}
+  if(open)open.addEventListener('click',show);
+  X.addEventListener('click',hide);
+  M.addEventListener('click',function(e){if(e.target===M)hide();});
+  var g=function(id){return (document.getElementById(id).value||'').trim();};
+  F.addEventListener('submit',function(e){
+    e.preventDefault();
+    var nome=g('bxNome'),whats=g('bxWhats'),cep=g('bxCep'),tam=g('bxTam'),
+        end=g('bxEnd'),cid=g('bxCid'),time=g('bxTime'),ok=document.getElementById('bxOk').checked;
+    if(!nome||!whats||!cep||!tam||!end||!cid||!time){ERR.textContent='Preencha todos os campos, incluindo o tamanho.';return;}
+    if(!ok){ERR.textContent='Confirme que leu as condições da assinatura.';return;}
+    ERR.textContent='';
+    var msg='*ASSINATURA BOX RETRÔ NAZA*\n\n'+
+      'Nome: '+nome+'\n'+'WhatsApp: '+whats+'\n'+
+      'Endereço: '+end+'\n'+'Cidade/UF: '+cid+'\n'+'CEP: '+cep+'\n'+
+      'Time do coração: '+time+'\n'+'Tamanho: '+tam+'\n'+
+      'Plano: Mensal R$199\n\nQuero assinar o Box Retrô!';
+    WA.href='https://wa.me/5548991245814?text='+encodeURIComponent(msg);
+    S1.style.display='none';S2.style.display='block';
+    M.querySelector('.bxcard').scrollTop=0;
+  });
+})();</script>
 
 </body>
 </html>
