@@ -238,7 +238,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   .boxretro .br-btn{font-size:14px;padding:12px 16px}
 }
 </style>
-  <button type="button" class="boxretro" id="bxOpen" aria-label="Assinar o Box Retro"><span class="br-tag">🎁 NOVIDADE</span><span class="br-main"><b class="br-title">BOX RETRÔ · Assinatura mensal</b><span class="br-sub">Todo mês uma camisa retrô personalizada e <b>surpresa</b> — você só descobre quando abrir 🔥</span></span><span class="br-cta"><span class="br-price">R$199<small>/mês</small></span><span class="br-btn">QUERO ASSINAR ›</span></span></button>
+  <button type="button" class="boxretro" id="bxOpen" aria-label="Assinar o Box Retro"><span class="br-tag">🎁 NOVIDADE</span><span class="br-main"><b class="br-title">BOX RETRÔ · Assinatura mensal</b><span class="br-sub">Todo mês uma camisa retrô personalizada e <b>surpresa</b> — você só descobre quando abrir 🔥</span></span><span class="br-cta"><span class="br-price">R$209,90<small>/mês</small></span><span class="br-btn">QUERO ASSINAR ›</span></span></button>
 
   <div class="tabs" id="tabs" role="tablist">
     <button type="button" role="tab" data-aba="estoque" aria-selected="false">Pronta entrega<small>Já no Brasil, envio imediato</small></button>
@@ -587,7 +587,7 @@ render();
     <button type="button" class="bxclose" id="bxX" aria-label="Fechar">&times;</button>
     <div id="bxS1">
       <h2>Box Retrô &middot; Assinatura mensal</h2>
-      <p class="bxsub">R$199/mês &middot; uma camisa retrô personalizada surpresa todo mês</p>
+      <p class="bxsub">R$209,90/mês &middot; uma camisa retrô personalizada surpresa todo mês</p>
       <form id="bxForm" novalidate>
         <label class="bxf">Nome completo</label>
         <input id="bxNome" autocomplete="name" placeholder="Seu nome">
@@ -606,7 +606,7 @@ render();
         <label class="bxf">Time do coração</label>
         <input id="bxTime" placeholder="Ex.: Flamengo, Real Madrid...">
         <label class="bxchk"><input type="checkbox" id="bxOk">
-          <span>Entendi que a box é <b>surpresa e personalizada</b>, a cobrança é <b>mensal de R$199 no cartão</b>, e que por ser personalizada <b>não há troca por arrependimento</b> (só por defeito ou erro de tamanho nosso).</span></label>
+          <span>Entendi que a box é <b>surpresa e personalizada</b>, a cobrança é <b>mensal de R$209,90 no cartão</b>, e que por ser personalizada <b>não há troca por arrependimento</b> (só por defeito ou erro de tamanho nosso).</span></label>
         <div class="bxerr" id="bxErr"></div>
         <button type="submit" class="bxgo" id="bxGo">Continuar para o pagamento</button>
         <p class="bxnote">O tamanho é obrigatório para a camisa servir. Seus dados vão para a loja confirmar o pedido.</p>
@@ -616,9 +616,8 @@ render();
       <div class="bxbig">&#127881;</div>
       <h2>Quase lá!</h2>
       <p>Falta confirmar 2 passos rápidos:</p>
-      <a class="bxwa" id="bxWA" href="#" target="_blank" rel="noopener">1 &middot; Enviar meus dados no WhatsApp</a>
-      <a class="bxpay" id="bxPay" href="https://mpago.la/2fjaZia" target="_blank" rel="noopener">2 &middot; Ativar assinatura (R$199/mês)</a>
-      <p class="bxnote">A assinatura só começa depois que a loja confirmar seu tamanho e time. Qualquer dúvida, chama no WhatsApp.</p>
+      <a class="bxwa" id="bxWA" href="#" target="_blank" rel="noopener">Enviar meus dados no WhatsApp</a>
+      <p class="bxnote">A gente confirma seu tamanho e time e manda o link de pagamento da assinatura pelo WhatsApp.</p>
     </div>
   </div>
 </div>
@@ -644,7 +643,7 @@ render();
       'Nome: '+nome+'\n'+'WhatsApp: '+whats+'\n'+
       'Endereço: '+end+'\n'+'Cidade/UF: '+cid+'\n'+'CEP: '+cep+'\n'+
       'Time do coração: '+time+'\n'+'Tamanho: '+tam+'\n'+
-      'Plano: Mensal R$199\n\nQuero assinar o Box Retrô!';
+      'Plano: Mensal R$209,90\n\nQuero assinar o Box Retrô!';
     WA.href='https://wa.me/5548991245814?text='+encodeURIComponent(msg);
     S1.style.display='none';S2.style.display='block';
     M.querySelector('.bxcard').scrollTop=0;
@@ -653,6 +652,6 @@ render();
 
 <script src="sb.js?v=1"></script>
 <script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="loja.js?v=5"></script>
+<script src="loja.js?v=6"></script>
 </body>
 </html>

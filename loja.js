@@ -8,6 +8,9 @@
 const SB_URL = "https://woltxsjfktntwdxlolrp.supabase.co";
 const SB_KEY = "sb_publishable_WdqvGyQJQ8taq_kS6TIgKw_QbGNCUVe";
 const SITE = location.origin + location.pathname;
+// Depois de confirmar o e-mail, o Supabase devolve a pessoa com #...&type=signup no endereço.
+// É preciso ler isso ANTES de criar o cliente, que limpa o endereço.
+const TIPO_RETORNO = (location.hash.match(/[#&]type=([a-z_]+)/) || [])[1] || "";
 // identificação da loja (Decreto 7.962/2013)
 const LOJA_ID = "Ariéli Nazário · CPF 113.881.769-47 · Criciúma/SC · WhatsApp (48) 99124-5814 · Instagram @arielinazario";
 if(!window.supabase || !window.supabase.createClient){
@@ -158,6 +161,23 @@ function traduz(err){
   if(/rate limit/i.test(m)) return "Muitas tentativas. Aguarde alguns minutos e tente de novo.";
   if(/password/i.test(m) && /weak|short|least/i.test(m)) return "Escolha uma senha mais forte (8+ caracteres).";
   return m || "Algo deu errado. Tente de novo.";
+}
+function avisoConfirmado(tipo){
+  if(location.hash) history.replaceState(null, "", location.pathname + location.search);
+  const novo = tipo === "email_change", completo = perfilOk(cli);
+  openSheet(novo ? "Novo e-mail confirmado" : "E-mail confirmado", `
+    <div style="text-align:center;font-size:46px;line-height:1;margin-top:4px">&#9989;</div>
+    <p style="font-size:16.5px;line-height:1.5;margin:12px 0 0;text-align:center;font-weight:600">${novo ? "Pronto! Seu novo e-mail está confirmado." : "Seu e-mail foi confirmado!"}</p>
+    <p class="note" style="text-align:center;margin-top:8px">${!user ? "Entre na sua conta para completar seu cadastro."
+      : completo ? "Sua conta está pronta. É só escolher suas camisas." : "Acesse sua conta para completar seu cadastro com endereço e WhatsApp."}</p>
+    <div class="lj-sp"></div>
+    <button type="button" class="btn pri" id="ljOkConf">${!user ? "Entrar na minha conta" : completo ? "Ir para minha conta" : "Completar meu cadastro"}</button>
+    <div style="height:8px"></div>
+    <button type="button" class="btn ghost" data-close>Continuar comprando</button>`);
+  document.getElementById("ljOkConf").addEventListener("click", () => {
+    if(!user) return abrirLogin("entrar", () => abrirConta());
+    perfilOk(cli) ? abrirConta() : abrirDados(() => abrirConta());
+  });
 }
 function abrirNovaSenha(){
   openSheet("Criar nova senha", `<span class="lbl">Nova senha</span><input class="in" id="ljNova" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" style="text-transform:none">
@@ -488,7 +508,9 @@ sb.auth.onAuthStateChange((ev, session) => {
   const { data: { session } } = await sb.auth.getSession();
   user = session ? session.user : null; atualizarBotao();
   if(user){ try { await carregarCliente(); } catch(e){} }
-  render(); rota();
+  render();
+  if(TIPO_RETORNO === "signup" || TIPO_RETORNO === "email_change") avisoConfirmado(TIPO_RETORNO);
+  else rota();
 })();
 window.addEventListener("hashchange", rota);
 })();
