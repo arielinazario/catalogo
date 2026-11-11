@@ -98,6 +98,7 @@ function atualizarBotao(){
   const b = document.getElementById("ljAcct"); if(!b) return;
   b.textContent = user ? "Minha conta" : "Entrar";
   const c = document.getElementById("ljCriar"); if(c) c.hidden = !!user;
+  const x = document.getElementById("ljSairTop"); if(x) x.hidden = !user;
 }
 
 /* ---------- Pix copia e cola (BR Code estático com valor) ---------- */
@@ -338,6 +339,12 @@ function abrirPagina(titulo, html){
   document.getElementById("pgVolta").addEventListener("click", fecharConta);
   return pg;
 }
+async function sair(){
+  try { await sb.auth.signOut(); } catch(e){}
+  user = null; cli = null; atualizarBotao();
+  if(contaAberta) fecharConta(); else closeSheet();
+  toast("Você saiu da conta.");
+}
 async function abrirConta(destaque){
   if(!user) return abrirLogin("entrar", () => abrirConta(destaque));
   if(!criarPagina()) return;
@@ -361,7 +368,7 @@ async function abrirConta(destaque){
     <div class="lj-sp"></div><div class="lj-sp"></div>
     <button type="button" class="btn ghost" id="ljSair" style="max-width:320px">Sair da conta</button>`);
   document.getElementById("ljMeusDados").addEventListener("click", () => abrirDados(() => abrirConta()));
-  document.getElementById("ljSair").addEventListener("click", async () => { await sb.auth.signOut(); fecharConta(); toast("Você saiu da conta."); });
+  document.getElementById("ljSair").addEventListener("click", sair);
   document.querySelectorAll("[data-lj-pagar]").forEach(b => b.addEventListener("click", async e => {
     ocupado(e.currentTarget, true, "Abrindo o Mercado Pago…");
     try { const r = await api("pagar", { id: b.dataset.ljPagar }); location.href = r.pagar_url; } catch(err){ ocupado(e.currentTarget, false); toast(err.message); }
@@ -439,11 +446,12 @@ try { openItem = function(id){
 document.addEventListener("click", e => { if(e.target.closest("#bxOpen")){ e.preventDefault(); e.stopImmediatePropagation(); abrirBox(); } }, true);
 // botão de conta no topo
 const topActs = document.getElementById("topActs"), ig = document.querySelector(".ig");
-if(topActs) topActs.innerHTML = `<button type="button" class="tbtn" id="ljAcct">Entrar</button><button type="button" class="tbtn pri" id="ljCriar">Criar conta</button>`;
+if(topActs) topActs.innerHTML = `<button type="button" class="tbtn pri" id="ljAcct">Entrar</button><button type="button" class="tbtn" id="ljCriar">Criar conta</button><button type="button" class="tbtn" id="ljSairTop" hidden>Sair</button>`;
 else if(ig) ig.insertAdjacentHTML("beforebegin", `<button type="button" class="acct" id="ljAcct">Entrar</button>`);
 document.addEventListener("click", e => {
   if(e.target.closest("#ljAcct")){ user ? abrirConta() : abrirLogin("entrar"); return; }
   if(e.target.closest("#ljCriar")){ abrirLogin("criar"); return; }
+  if(e.target.closest("#ljSairTop")){ sair(); return; }
   const m = e.target.closest("[data-lj-modo]"); if(m){ abrirLogin(m.dataset.ljModo); }
 });
 // textos de WhatsApp no rodapé
