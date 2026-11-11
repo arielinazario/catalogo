@@ -43,9 +43,9 @@ const perfilOk = c => !!(c && c.nome && c.whatsapp && c.cep && c.endereco && c.n
 
 /* ---------- estilos ---------- */
 document.head.insertAdjacentHTML("beforeend", `<style>
-.acct{color:#FFFFFF;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.12);border-radius:999px;padding:6px 12px;white-space:nowrap;cursor:pointer;margin-right:6px}
-.lj-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--surface2);border-radius:12px;padding:4px;margin:4px 0 10px}
-.lj-tabs button{border:0;background:none;border-radius:9px;padding:9px;font-weight:700;color:var(--muted);cursor:pointer}
+.acct{color:#FFFFFF;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.12);border-radius:8px;padding:6px 12px;white-space:nowrap;cursor:pointer;margin-right:6px}
+.lj-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--surface2);border-radius:8px;padding:4px;margin:4px 0 10px}
+.lj-tabs button{border:0;background:none;border-radius:6px;padding:9px;font-weight:700;color:var(--muted);cursor:pointer}
 .lj-tabs button[aria-pressed="true"]{background:var(--wine);color:var(--on-wine)}
 .lj-g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lj-g3{display:grid;grid-template-columns:2fr 1fr;gap:8px}
 .lj-pay{display:grid;gap:8px;margin-top:4px}
@@ -460,22 +460,27 @@ function rota(){
   const m = h.match(/^#pedido-(NZ\d+)$/); if(m) return abrirConta(m[1]);
   if(contaAberta) fecharConta();
 }
-sb.auth.onAuthStateChange(async (ev, session) => {
-  const antes = user;
-  user = session ? session.user : null;
-  if(ev === "PASSWORD_RECOVERY"){ abrirNovaSenha(); return; }
-  if(user && (!antes || antes.id !== user.id)) await carregarCliente();
-  if(!user) cli = null;
-  atualizarBotao();
-  if(ev === "SIGNED_IN" && depoisLogin){ const f = depoisLogin; depoisLogin = null; if(!perfilOk(cli)) abrirDados(f); else f(); }
-  else if(ev === "SIGNED_IN" && !antes && !document.getElementById("sheet").hidden && document.getElementById("ljGo")){ perfilOk(cli) ? abrirConta() : abrirDados(); }
+// IMPORTANTE: nada de await em chamadas do Supabase dentro deste callback — a biblioteca
+// trava (deadlock no lock de autenticação). O trabalho é adiado com setTimeout.
+sb.auth.onAuthStateChange((ev, session) => {
+  setTimeout(async () => {
+    const antes = user;
+    user = session ? session.user : null;
+    if(ev === "PASSWORD_RECOVERY"){ atualizarBotao(); abrirNovaSenha(); return; }
+    atualizarBotao();
+    if(user && (!antes || antes.id !== user.id || !cli)){ try { await carregarCliente(); } catch(e){} }
+    if(!user) cli = null;
+    if(ev === "SIGNED_IN" && depoisLogin){ const f = depoisLogin; depoisLogin = null; if(!perfilOk(cli)) abrirDados(f); else f(); }
+    else if(ev === "SIGNED_IN" && !antes && !document.getElementById("sheet").hidden && document.getElementById("ljGo")){ closeSheet(); perfilOk(cli) ? abrirConta() : abrirDados(() => abrirConta()); }
+  }, 0);
 });
 (async () => {
   try { await carregarConfig(); } catch(e){}
   rodape();
   const { data: { session } } = await sb.auth.getSession();
-  user = session ? session.user : null; if(user) await carregarCliente();
-  atualizarBotao(); render(); rota();
+  user = session ? session.user : null; atualizarBotao();
+  if(user){ try { await carregarCliente(); } catch(e){} }
+  render(); rota();
 })();
 window.addEventListener("hashchange", rota);
 })();

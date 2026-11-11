@@ -47,13 +47,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .perks{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0}
 .topacts{display:flex;gap:6px;flex:none}
-.tbtn{border:1.5px solid var(--wine);background:none;color:var(--wine);border-radius:999px;padding:8px 14px;font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap}
+.tbtn{border:1.5px solid var(--wine);background:none;color:var(--wine);border-radius:8px;padding:8px 14px;font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap}
 .tbtn.pri{background:var(--wine);color:var(--on-wine)}
 .sobre{margin-top:28px;text-align:center;color:var(--muted);font-size:14.5px;display:grid;gap:8px;justify-items:center}
 .sobre p{margin:0;max-width:52ch}
 .sobre a{color:var(--wine);font-weight:700;text-decoration:none}
 @media(max-width:420px){.brand b{font-size:22px}.brand span{font-size:8.5px;letter-spacing:.08em;white-space:nowrap}.brand img{width:40px;height:40px}.tbtn{padding:7px 11px;font-size:12.5px}}
-.perks span{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(255,252,247,.35);border-radius:999px;padding:5px 11px}
+.perks span{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(255,252,247,.35);border-radius:8px;padding:5px 11px}
 
 /* filters */
 .filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);padding-block:12px 8px;display:grid;gap:8px}
@@ -61,7 +61,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .search:focus{outline:2px solid var(--wine);border-color:transparent}
 .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .chips::-webkit-scrollbar{display:none}
-.chips button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;font-weight:600;font-size:13.5px;color:var(--muted);cursor:pointer}
+.chips button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 13px;font-weight:600;font-size:13.5px;color:var(--muted);cursor:pointer}
 .chips button[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:var(--on-wine)}
 .count{font-size:13px;color:var(--muted);margin:4px 0 10px}
 .fgroup{display:grid;gap:7px}
@@ -87,8 +87,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (min-width:1180px){.layout .grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:var(--surface2);padding:5px;border-radius:16px;margin-top:16px}
-.tabs button{border:0;background:none;padding:10px 6px;border-radius:12px;cursor:pointer;display:grid;gap:1px;color:var(--muted);font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.07em;text-transform:uppercase;line-height:1.1}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:var(--surface2);padding:5px;border-radius:11px;margin-top:16px}
+.tabs button{border:0;background:none;padding:10px 6px;border-radius:8px;cursor:pointer;display:grid;gap:1px;color:var(--muted);font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.07em;text-transform:uppercase;line-height:1.1}
 .tabs button small{font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:.01em;text-transform:none;opacity:.85}
 .tabs button[aria-selected="true"]{background:var(--wine);color:var(--on-wine);box-shadow:var(--shadow)}
 .price{font-family:var(--display);font-weight:700;font-size:21px;color:var(--wine);letter-spacing:.01em;margin-top:6px}
@@ -97,7 +97,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .line .pr{font-weight:700;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .cup{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch}
 .cup .in{text-transform:none}
-.cup button{border:1px solid var(--wine);background:var(--wine);color:var(--on-wine);border-radius:12px;padding:0 16px;font-weight:700;cursor:pointer;white-space:nowrap}
+.cup button{border:1px solid var(--wine);background:var(--wine);color:var(--on-wine);border-radius:8px;padding:0 16px;font-weight:700;cursor:pointer;white-space:nowrap}
 .cupmsg{font-size:13px;font-weight:600;margin-top:6px}
 .cupmsg.ok{color:var(--good)}
 .cupmsg.no{color:#B3261E}
@@ -136,7 +136,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .pimg{width:100%;max-height:300px;aspect-ratio:1/1;object-fit:contain;background:#FFFFFF;border-radius:14px;display:block}
 .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px;display:block}
 .sizes{display:flex;flex-wrap:wrap;gap:6px}
-.sz{min-width:52px;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 10px;font-weight:700;cursor:pointer}
+.sz{min-width:52px;border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 10px;font-weight:700;cursor:pointer}
 .sz[aria-pressed="true"]{border-color:var(--wine);background:var(--wine-soft);color:var(--wine)}
 .row2{display:grid;grid-template-columns:minmax(0,1fr) 96px;gap:8px}
 .in{width:100%;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:11px 12px;min-width:0}
@@ -144,7 +144,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .note{font-size:12.5px;color:var(--muted);margin-top:6px}
 .brk{margin-top:14px;display:grid;gap:4px;font-size:14px;color:var(--muted)}
 .brk div{display:flex;justify-content:space-between}
-.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-size:15px;width:100%}
+.btn{border:0;border-radius:8px;padding:13px 16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-size:15px;width:100%}
 .btn.pri{background:var(--wine);color:var(--on-wine)}
 .btn.wa{background:var(--wine);color:#FFFFFF}
 .btn.ghost{background:var(--surface2);color:var(--ink)}
@@ -159,7 +159,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 
 /* cart bar */
 .cartbar{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--bg) 70%,transparent)}
-.cartbar button{max-width:560px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:16px;background:var(--wine);color:#FFFFFF;padding:14px 18px;font-weight:700;box-shadow:0 10px 30px rgba(94,8,16,.35);cursor:pointer}
+.cartbar button{max-width:560px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:8px;background:var(--wine);color:#FFFFFF;padding:14px 18px;font-weight:700;box-shadow:0 10px 30px rgba(94,8,16,.35);cursor:pointer}
 .cartbar .n{background:#FFFFFF;color:var(--wine);border-radius:999px;min-width:26px;height:26px;display:inline-grid;place-items:center;font-size:13px;margin-right:8px;padding:0 6px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;z-index:30;font-size:14px;max-width:calc(100% - 32px)}
 .foot{margin-top:28px;text-align:center;font-size:13px;color:var(--muted);display:grid;gap:4px}
@@ -222,7 +222,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .boxretro .br-price{color:#6e1222;font:800 30px/1 system-ui,sans-serif;white-space:nowrap}
 .boxretro .br-price small{font-size:15px;font-weight:700;color:#8c1a2c}
 .boxretro .br-btn{background:#6e1222;color:#f6f1e9;font:800 15px/1 system-ui,sans-serif;letter-spacing:.04em;
-  padding:13px 20px;border-radius:30px;white-space:nowrap}
+  padding:13px 20px;border-radius:8px;white-space:nowrap}
 @media(max-width:620px){
   .boxretro{flex-direction:column;align-items:stretch;text-align:center;gap:12px;padding:20px 18px 18px}
   .boxretro .br-main{padding-top:16px}
@@ -653,6 +653,6 @@ render();
 
 <script src="sb.js?v=1"></script>
 <script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="loja.js?v=3"></script>
+<script src="loja.js?v=4"></script>
 </body>
 </html>
