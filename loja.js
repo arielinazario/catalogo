@@ -85,6 +85,7 @@ async function carregarCliente(){
 function atualizarBotao(){
   const b = document.getElementById("ljAcct"); if(!b) return;
   b.textContent = user ? "Minha conta" : "Entrar";
+  const c = document.getElementById("ljCriar"); if(c) c.hidden = !!user;
 }
 
 /* ---------- Pix copia e cola (BR Code estático com valor) ---------- */
@@ -389,10 +390,12 @@ try { openItem = function(id){
 // Box Retrô: troca o formulário antigo (WhatsApp) pelo de assinatura com conta
 document.addEventListener("click", e => { if(e.target.closest("#bxOpen")){ e.preventDefault(); e.stopImmediatePropagation(); abrirBox(); } }, true);
 // botão de conta no topo
-const ig = document.querySelector(".ig");
-if(ig) ig.insertAdjacentHTML("beforebegin", `<button type="button" class="acct" id="ljAcct">Entrar</button>`);
+const topActs = document.getElementById("topActs"), ig = document.querySelector(".ig");
+if(topActs) topActs.innerHTML = `<button type="button" class="tbtn" id="ljAcct">Entrar</button><button type="button" class="tbtn pri" id="ljCriar">Criar conta</button>`;
+else if(ig) ig.insertAdjacentHTML("beforebegin", `<button type="button" class="acct" id="ljAcct">Entrar</button>`);
 document.addEventListener("click", e => {
   if(e.target.closest("#ljAcct")){ user ? abrirConta() : abrirLogin("entrar"); return; }
+  if(e.target.closest("#ljCriar")){ abrirLogin("criar"); return; }
   const m = e.target.closest("[data-lj-modo]"); if(m){ abrirLogin(m.dataset.ljModo); }
 });
 // textos de WhatsApp no rodapé
