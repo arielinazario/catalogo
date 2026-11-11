@@ -10,7 +10,13 @@ const SB_KEY = "sb_publishable_WdqvGyQJQ8taq_kS6TIgKw_QbGNCUVe";
 const SITE = location.origin + location.pathname;
 // identificação da loja (Decreto 7.962/2013)
 const LOJA_ID = "Ariéli Nazário · CPF 113.881.769-47 · Criciúma/SC · WhatsApp (48) 99124-5814 · Instagram @arielinazario";
-if(!window.supabase || !window.supabase.createClient){ console.warn("Supabase não carregou; loja online desativada."); return; }
+if(!window.supabase || !window.supabase.createClient){
+  console.warn("Supabase não carregou; loja online desativada.");
+  const ta = document.getElementById("topActs");
+  if(ta){ ta.innerHTML = `<button type="button" class="tbtn" id="ljOff">Entrar</button>`;
+    document.getElementById("ljOff").addEventListener("click", () => alert("Não foi possível carregar a loja agora. Recarregue a página ou fale com a gente no WhatsApp.")); }
+  return;
+}
 const sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 let user = null, cli = null, CFG = { loja: {}, pix: {} }, depoisLogin = null, pagamento = "mercadopago";
@@ -57,6 +63,12 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 .lj-pix{font-family:ui-monospace,monospace;font-size:12px;word-break:break-all;background:var(--surface2);border-radius:10px;padding:10px;margin-top:6px}
 .lj-chk{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--muted);margin-top:12px}.lj-chk input{margin-top:3px}
 .lj-err{color:#9B1C1C;font-size:13px;font-weight:600;margin-top:8px}
+.pgconta{padding:10px 0 24px}
+.pgtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.pgconta h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,6vw,34px);text-transform:uppercase;letter-spacing:.02em;margin:2px 0 12px}
+.pgvolta{background:none;border:0;color:var(--wine);font-weight:700;cursor:pointer;padding:8px 0;font-size:14.5px}
+.pgconta .lbl{margin-top:22px}
+@media(min-width:760px){.pgconta .lj-ped,.pgconta .lj-box{max-width:760px}}
 .lj-sp{height:10px}.lj-link{background:none;border:0;color:var(--wine);font-weight:700;cursor:pointer;padding:0;text-decoration:underline}
 </style>`);
 
@@ -296,25 +308,60 @@ function abrirPix(p){
 }
 
 /* ---------- minha conta ---------- */
+/* ---------- minha conta: página própria ---------- */
+let pgConta = null, contaAberta = false;
+const PARTES_LOJA = ["header.hero", ".boxretro", ".tabs", ".layout", ".medidas", ".sobre", ".cartbar"];
+function criarPagina(){
+  if(pgConta) return pgConta;
+  const wrap = document.querySelector(".wrap"); if(!wrap) return null;
+  pgConta = document.createElement("section");
+  pgConta.className = "pgconta"; pgConta.id = "pgConta"; pgConta.hidden = true;
+  const antes = document.querySelector(".sobre") || document.querySelector(".foot");
+  antes ? wrap.insertBefore(pgConta, antes) : wrap.appendChild(pgConta);
+  return pgConta;
+}
+function mostrarLoja(ver){
+  PARTES_LOJA.forEach(sel => { const el = document.querySelector(sel); if(el) el.style.display = ver ? "" : "none"; });
+}
+function fecharConta(){
+  contaAberta = false;
+  if(pgConta) pgConta.hidden = true;
+  mostrarLoja(true); render();
+  if(location.hash) history.replaceState(null, "", location.pathname + location.search);
+  window.scrollTo(0, 0);
+}
+function abrirPagina(titulo, html){
+  const pg = criarPagina(); if(!pg) return null;
+  contaAberta = true; closeSheet();
+  pg.hidden = false; mostrarLoja(false);
+  pg.innerHTML = `<div class="pgtop"><button type="button" class="pgvolta" id="pgVolta">‹ Voltar à loja</button></div><h2>${esc(titulo)}</h2>${html}`;
+  document.getElementById("pgVolta").addEventListener("click", fecharConta);
+  return pg;
+}
 async function abrirConta(destaque){
   if(!user) return abrirLogin("entrar", () => abrirConta(destaque));
-  openSheet("Minha conta", `<div class="note">Carregando…</div>`);
+  if(!criarPagina()) return;
+  abrirPagina("Minha conta", `<div class="note">Carregando seus dados…</div>`);
+  window.scrollTo(0, 0);
+  if(location.hash !== "#minha-conta" && !destaque) history.replaceState(null, "", "#minha-conta");
   await carregarCliente();
   const [{ data: peds }, { data: ass }] = await Promise.all([
     sb.from("pedidos").select("id,codigo,status,tipo,forma_pagamento,total,criado_em,rastreio,pix_comprovante,pedido_itens(descricao,tamanho,qtd,pers_nome,pers_num,patch,total),pedido_eventos(status,criado_em)").order("criado_em", { ascending: false }).limit(50),
     sb.from("assinaturas").select("id,status,tamanho,time_coracao,valor,inicio,criado_em").neq("status", "cancelado").order("criado_em", { ascending: false })
   ]);
+  if(!contaAberta) return;
   const c = cli || {};
-  openSheet("Minha conta", `
-    <div class="lj-box"><div class="r"><div><b>${esc(c.nome || user.email)}</b><div class="note" style="margin-top:2px">${esc(user.email)}${perfilOk(c) ? " · " + esc(c.cidade) + "/" + esc(c.uf) : ""}</div></div><button type="button" class="lj-link" id="ljMeusDados">${perfilOk(c) ? "Meus dados" : "Completar dados"}</button></div></div>
+  abrirPagina("Minha conta", `
+    <div class="lj-box"><div class="r"><div><b>${esc(c.nome || user.email)}</b><div class="note" style="margin-top:2px">${esc(user.email)}${perfilOk(c) ? "<br>" + esc(c.endereco) + ", " + esc(c.numero) + (c.complemento ? " · " + esc(c.complemento) : "") + " · " + esc(c.bairro) + " · " + esc(c.cidade) + "/" + esc(c.uf) + " · " + esc(c.cep) : ""}</div></div><button type="button" class="lj-link" id="ljMeusDados">${perfilOk(c) ? "Alterar" : "Completar dados"}</button></div></div>
     ${(ass || []).map(a => `<div class="lj-ped"><div class="r" style="display:flex;justify-content:space-between;gap:8px"><span class="t">Box Retrô · assinatura</span><span class="lj-chip ${AS_ST[a.status][1]}">${AS_ST[a.status][0]}</span></div>
       <div class="d">Tam. ${esc(a.tamanho)}${a.time_coracao ? " · " + esc(a.time_coracao) : ""} · ${brl(a.valor)}/mês${a.inicio ? " · desde " + dBR(a.inicio + "T12:00") : ""}</div>
       ${a.status === "aguardando_pagamento" ? `<div class="note">Ainda não recebemos a confirmação do Mercado Pago. Se você não concluiu, assine de novo pelo banner do Box Retrô.</div>` : `<div class="note">Para pausar ou cancelar, use a área de assinaturas do seu Mercado Pago ou fale com a loja.</div>`}</div>`).join("")}
     <span class="lbl">Meus pedidos</span>
     ${(peds || []).length ? peds.map(p => cartaoPedido(p, destaque)).join("") : `<div class="note">Você ainda não fez pedidos pelo site.</div>`}
-    <div class="lj-sp"></div><button type="button" class="btn ghost" id="ljSair">Sair da conta</button>`);
-  document.getElementById("ljMeusDados").addEventListener("click", () => abrirDados());
-  document.getElementById("ljSair").addEventListener("click", async () => { await sb.auth.signOut(); closeSheet(); toast("Você saiu da conta."); });
+    <div class="lj-sp"></div><div class="lj-sp"></div>
+    <button type="button" class="btn ghost" id="ljSair" style="max-width:320px">Sair da conta</button>`);
+  document.getElementById("ljMeusDados").addEventListener("click", () => abrirDados(() => abrirConta()));
+  document.getElementById("ljSair").addEventListener("click", async () => { await sb.auth.signOut(); fecharConta(); toast("Você saiu da conta."); });
   document.querySelectorAll("[data-lj-pagar]").forEach(b => b.addEventListener("click", async e => {
     ocupado(e.currentTarget, true, "Abrindo o Mercado Pago…");
     try { const r = await api("pagar", { id: b.dataset.ljPagar }); location.href = r.pagar_url; } catch(err){ ocupado(e.currentTarget, false); toast(err.message); }
@@ -377,6 +424,7 @@ const _render = render;
 try { render = function(){ _render(); const t = document.getElementById("cartTxt"); if(t) t.textContent = "Meu carrinho · finalizar compra"; }; } catch(e){}
 // detalhe da camisa: textos de compra e patch
 const _openItem = openItem;
+document.addEventListener("click", e => { if(contaAberta && (e.target.closest(".card") || e.target.closest("[data-aba]"))) fecharConta(); }, true);
 try { openItem = function(id){
   _openItem(id);
   const disp = document.getElementById("dispBtn"), add = document.getElementById("addBtn");
@@ -408,8 +456,9 @@ rodape();
 function rota(){
   const h = location.hash;
   if(h === "#nova-senha") return; // tratado no evento PASSWORD_RECOVERY
-  if(h === "#minha-conta") return abrirConta();
+  if(h === "#minha-conta"){ if(!contaAberta) abrirConta(); return; }
   const m = h.match(/^#pedido-(NZ\d+)$/); if(m) return abrirConta(m[1]);
+  if(contaAberta) fecharConta();
 }
 sb.auth.onAuthStateChange(async (ev, session) => {
   const antes = user;
