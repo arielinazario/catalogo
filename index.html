@@ -193,13 +193,13 @@ button,input,select,textarea{font:inherit;color:inherit}
       <a class="ig" href="https://instagram.com/arielinazario" target="_blank" rel="noopener">@arielinazario</a>
     </div>
     <h1>Vista a camisa do seu time</h1>
-    <p>Camisas tailandesas de primeira linha. Pronta entrega para envio imediato e catálogo sob encomenda — escolha os modelos e feche tudo pelo WhatsApp.</p>
+    <p>Camisas tailandesas de primeira linha. Pronta entrega para envio imediato e catálogo sob encomenda — escolha os modelos e compre direto pelo site, no cartão ou Pix.</p>
     <div class="perks"><span>Pronta entrega e sob encomenda</span><span>Personalização com nome e número</span><span>Patches sob consulta</span></div>
   </header>
 
   
 <style>
-.boxretro{display:flex;align-items:center;gap:18px;margin:16px 0 4px;padding:18px 22px;border-radius:20px;
+.boxretro{display:flex;align-items:center;gap:18px;width:100%;max-width:100%;box-sizing:border-box;margin:16px 0 4px;text-align:left;cursor:pointer;font:inherit;color:inherit;-webkit-appearance:none;appearance:none;padding:18px 22px;border-radius:20px;
   background:linear-gradient(135deg,#f6f1e9,#efe6d6);border:2px solid #c69e5c;text-decoration:none;
   box-shadow:0 10px 30px rgba(60,10,20,.28);transition:transform .15s ease,box-shadow .15s ease;position:relative;overflow:hidden}
 .boxretro:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(60,10,20,.34)}
@@ -219,6 +219,14 @@ button,input,select,textarea{font:inherit;color:inherit}
   .boxretro .br-main{padding-top:16px}
   .boxretro .br-cta{flex-direction:row;justify-content:center;gap:16px}
   .boxretro .br-title{font-size:21px}
+  .boxretro .br-sub{font-size:14px}
+}
+@media(max-width:380px){
+  .boxretro{padding:18px 14px 16px}
+  .boxretro .br-title{font-size:19px}
+  .boxretro .br-cta{gap:10px}
+  .boxretro .br-price{font-size:26px}
+  .boxretro .br-btn{font-size:14px;padding:12px 16px}
 }
 </style>
   <button type="button" class="boxretro" id="bxOpen" aria-label="Assinar o Box Retro"><span class="br-tag">🎁 NOVIDADE</span><span class="br-main"><b class="br-title">BOX RETRÔ · Assinatura mensal</b><span class="br-sub">Todo mês uma camisa retrô personalizada e <b>surpresa</b> — você só descobre quando abrir 🔥</span></span><span class="br-cta"><span class="br-price">R$199<small>/mês</small></span><span class="br-btn">QUERO ASSINAR ›</span></span></button>
@@ -587,7 +595,7 @@ render();
         <label class="bxf">Time do coração</label>
         <input id="bxTime" placeholder="Ex.: Flamengo, Real Madrid...">
         <label class="bxchk"><input type="checkbox" id="bxOk">
-          <span>Entendi que a box é <b>surpresa e personalizada</b> (eu escolho o modelo e o craque), a cobrança é <b>mensal de R$199 no cartão</b>, e que por ser personalizada <b>não há troca por arrependimento</b> (só por defeito ou erro de tamanho nosso).</span></label>
+          <span>Entendi que a box é <b>surpresa e personalizada</b>, a cobrança é <b>mensal de R$199 no cartão</b>, e que por ser personalizada <b>não há troca por arrependimento</b> (só por defeito ou erro de tamanho nosso).</span></label>
         <div class="bxerr" id="bxErr"></div>
         <button type="submit" class="bxgo" id="bxGo">Continuar para o pagamento</button>
         <p class="bxnote">O tamanho é obrigatório para a camisa servir. Seus dados vão para a loja confirmar o pedido.</p>
@@ -632,5 +640,7 @@ render();
   });
 })();</script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script src="loja.js?v=1"></script>
 </body>
 </html>
