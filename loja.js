@@ -159,6 +159,9 @@ function abrirLogin(modo, depois){
         if(!document.getElementById("ljTermos").checked) throw new Error("Marque a concordância para criar a conta.");
         const { data, error } = await sb.auth.signUp({ email, password: senha, options: { emailRedirectTo: SITE } });
         if(error) throw error;
+        // Conta já existente: o Supabase devolve um usuário sem "identities" e NÃO envia e-mail nenhum.
+        if(data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0)
+          throw new Error("Esse e-mail já tem conta aqui. Use a aba Entrar — se não lembra a senha, toque em Esqueci minha senha.");
         if(!data.session){ closeSheet(); openSheet("Confirme seu e-mail", `<p>Enviamos um link de confirmação para <b>${esc(email)}</b>. Abra o e-mail, toque no link e depois volte aqui para entrar.</p><div class="note">Não chegou? Confira a caixa de spam.</div><div class="lj-sp"></div><button type="button" class="btn ghost" data-close>Ok</button>`); return; }
       } else {
         const { error } = await sb.auth.signInWithPassword({ email, password: senha });
@@ -564,7 +567,13 @@ sb.auth.onAuthStateChange((ev, session) => {
   render();
   if(ERRO_LINK) avisoLinkInvalido(ERRO_LINK);
   else if(TIPO_RETORNO === "recovery" || location.hash === "#nova-senha"){
-    if(user) abrirNovaSenha(); else avisoLinkInvalido("expired");
+    // a sessão do link pode demorar um instante para nascer; só depois disso o link é dado como vencido
+    for(let i = 0; i < 12 && !user; i++){
+      await new Promise(r => setTimeout(r, 250));
+      const { data } = await sb.auth.getSession();
+      user = data.session ? data.session.user : null;
+    }
+    if(user){ atualizarBotao(); abrirNovaSenha(); } else avisoLinkInvalido("expired");
   }
   else if(TIPO_RETORNO === "signup" || TIPO_RETORNO === "email_change") avisoConfirmado(TIPO_RETORNO);
   else rota();
