@@ -145,6 +145,26 @@ function pixCopiaCola(valor, txid){
   p += "6304"; return p + crc16(p);
 }
 
+/* ---------- camisa de teste (aparece só para a dona da loja) ---------- */
+const EMAIL_TESTE = "arieli.nazario@icloud.com";
+const CAMISA_TESTE = { id: "teste-naza", time: "NAZA", modelo: "Camisa teste · R$ 5", liga: "Teste", categoria: "Tradicional",
+  preco: 5, tamanhos: ["M"], descricao: "Produto só para testar o pagamento. Ninguém mais vê esta camisa.",
+  destaque: false, foto: "logo.png", tipo: "estoque" };
+// devolve true quando a lista mudou (aí quem chamou dá render())
+function camisaTeste(){
+  if(typeof estoque === "undefined" || typeof TUDO === "undefined") return false;
+  const dentro = estoque.some(x => x.id === CAMISA_TESTE.id);
+  const deve = !!user && String(user.email || "").toLowerCase() === EMAIL_TESTE;
+  if(deve === dentro) return false;
+  if(deve){ estoque.unshift(CAMISA_TESTE); TUDO.push(CAMISA_TESTE); }
+  else {
+    const i = estoque.findIndex(x => x.id === CAMISA_TESTE.id); if(i >= 0) estoque.splice(i, 1);
+    const j = TUDO.findIndex(x => x.id === CAMISA_TESTE.id); if(j >= 0) TUDO.splice(j, 1);
+    if(cart.some(c => c.id === CAMISA_TESTE.id)){ cart = cart.filter(c => c.id !== CAMISA_TESTE.id); saveCart(); }
+  }
+  return true;
+}
+
 /* ---------- times do coração (Séries A e B de 2026) ---------- */
 // Escudos oficiais são marcas registradas dos clubes: aqui usamos um brasão próprio,
 // desenhado com as cores e o padrão de cada time, nunca o escudo do clube.
@@ -689,6 +709,7 @@ sb.auth.onAuthStateChange((ev, session) => {
     atualizarBotao();
     if(user && (!antes || antes.id !== user.id || !cli)){ try { await carregarCliente(); } catch(e){} }
     if(!user) cli = null;
+    if(camisaTeste()) render();
     if(ev === "SIGNED_IN" && depoisLogin){ const f = depoisLogin; depoisLogin = null; if(!perfilOk(cli)) abrirDados(f); else f(); }
     else if(ev === "SIGNED_IN" && !antes && !document.getElementById("sheet").hidden && document.getElementById("ljGo")){ closeSheet(); perfilOk(cli) ? abrirConta() : abrirDados(() => abrirConta()); }
   }, 0);
@@ -699,6 +720,7 @@ sb.auth.onAuthStateChange((ev, session) => {
   const { data: { session } } = await sb.auth.getSession();
   user = session ? session.user : null; atualizarBotao();
   if(user){ try { await carregarCliente(); } catch(e){} }
+  camisaTeste();
   render();
   if(ERRO_LINK) avisoLinkInvalido(ERRO_LINK);
   else if(TIPO_RETORNO === "recovery" || location.hash === "#nova-senha"){
