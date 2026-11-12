@@ -53,12 +53,13 @@ const naRegiao = c => !!(c && semAc(c.uf) === semAc(CFG.loja.freteGratisUF || "S
 const frete = base => { if(!user || !perfilOk(cli)) return null; if(naRegiao(cli)) return 0; if(CFG.loja.freteGratisAcima != null && base >= Number(CFG.loja.freteGratisAcima)) return 0; return Number(CFG.loja.freteFixo || 0); };
 const minParcelas = () => CFG.loja.parcelasMin == null ? 0 : Number(CFG.loja.parcelasMin);
 const maxParcelas = () => Number(CFG.loja.parcelasMax || 2);
+// "sem juros" depende da configuração do Mercado Pago (hoje: parcelado cliente, o juro é do comprador)
+const semJuros = () => CFG.loja.parcelasSemJuros === true;
 const textoParcelas = total => {
-  const mx = maxParcelas(), mn = minParcelas();
+  const mx = maxParcelas(), mn = minParcelas(), j = semJuros() ? " sem juros" : "";
   if(mx < 2) return "crédito à vista";
-  if(!mn) return `crédito à vista ou em até ${mx}x sem juros`;
-  return Number(total) >= mn ? `crédito à vista ou em até ${mx}x sem juros`
-    : `crédito à vista (parcelamento em ${mx}x a partir de ${brl(mn)})`;
+  if(!mn || Number(total) >= mn) return `crédito à vista ou em até ${mx}x${j}`;
+  return `crédito à vista (parcelamento em ${mx}x a partir de ${brl(mn)})`;
 };
 const regraFrete = () => `Grátis para Criciúma e região${CFG.loja.freteGratisAcima != null ? ` e para pedidos a partir de ${brl(CFG.loja.freteGratisAcima)}` : ""}${CFG.loja.freteFixo ? `; demais: ${brl(CFG.loja.freteFixo)}` : ""}.`;
 const perfilOk = c => !!(c && c.nome && c.whatsapp && c.cep && c.endereco && c.numero && c.bairro && c.cidade && c.uf);
@@ -649,7 +650,7 @@ function pintaPedidos(){
 function comoPagou(p){
   if(p.forma_pagamento === "pix_chave") return "Pix direto para a loja";
   const t = p.mp_tipo, n = Number(p.mp_parcelas) || 1;
-  if(t === "credit_card") return "Cartão de crédito" + (n > 1 ? ` · ${n}x sem juros` : " · à vista") + " (Mercado Pago)";
+  if(t === "credit_card") return "Cartão de crédito" + (n > 1 ? ` · em ${n}x` : " · à vista") + " (Mercado Pago)";
   if(t === "debit_card") return "Cartão de débito (Mercado Pago)";
   if(t === "bank_transfer" || t === "account_money") return "Pix pelo Mercado Pago";
   if(t) return "Mercado Pago";
@@ -743,7 +744,7 @@ document.addEventListener("click", e => {
 // textos de WhatsApp no rodapé
 const foot = document.querySelector(".foot div"); if(foot) foot.textContent = "NAZA Camisas Importadas · compre pelo site · dúvidas pelo WhatsApp";
 const footEl = document.querySelector(".foot");
-function rodape(){ if(!footEl) return; const old = document.getElementById("ljFoot"); if(old) old.remove(); footEl.insertAdjacentHTML("beforeend", `<div id="ljFoot" style="display:grid;gap:4px;font-size:12px;opacity:.9"><div>${esc(LOJA_ID)}</div><div>Frete: ${esc(regraFrete())} Pagamento: Pix ou cartão${maxParcelas() > 1 ? ` em até ${maxParcelas()}x sem juros${minParcelas() ? ` para compras a partir de ${brl(minParcelas())}` : ""}` : " à vista"}.</div></div>`); }
+function rodape(){ if(!footEl) return; const old = document.getElementById("ljFoot"); if(old) old.remove(); footEl.insertAdjacentHTML("beforeend", `<div id="ljFoot" style="display:grid;gap:4px;font-size:12px;opacity:.9"><div>${esc(LOJA_ID)}</div><div>Frete: ${esc(regraFrete())} Pagamento: Pix ou cartão${maxParcelas() > 1 ? ` em até ${maxParcelas()}x${semJuros() ? " sem juros" : ""}${minParcelas() ? ` para compras a partir de ${brl(minParcelas())}` : ""}` : " à vista"}.</div></div>`); }
 rodape();
 
 /* ---------- sessão e rotas por # ---------- */
