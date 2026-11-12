@@ -570,9 +570,9 @@ function fecharConta(){
   if(location.hash) history.replaceState(null, "", location.pathname + location.search);
   window.scrollTo(0, 0);
 }
-function abrirPagina(titulo, html){
+function abrirPagina(titulo, html, chave){
   const pg = criarPagina(); if(!pg) return null;
-  contaAberta = true; closeSheet();
+  contaAberta = true; closeSheet(); pg.dataset.pg = chave || "conta";
   pg.hidden = false; mostrarLoja(false);
   pg.innerHTML = `<div class="pgtop"><button type="button" class="pgvolta" id="pgVolta">‹ Voltar à loja</button></div><h2>${esc(titulo)}</h2>${html}`;
   document.getElementById("pgVolta").addEventListener("click", fecharConta);
@@ -744,14 +744,71 @@ document.addEventListener("click", e => {
 // textos de WhatsApp no rodapé
 const foot = document.querySelector(".foot div"); if(foot) foot.textContent = "NAZA Camisas Importadas · compre pelo site · dúvidas pelo WhatsApp";
 const footEl = document.querySelector(".foot");
-function rodape(){ if(!footEl) return; const old = document.getElementById("ljFoot"); if(old) old.remove(); footEl.insertAdjacentHTML("beforeend", `<div id="ljFoot" style="display:grid;gap:4px;font-size:12px;opacity:.9"><div>${esc(LOJA_ID)}</div><div>Frete: ${esc(regraFrete())} Pagamento: Pix ou cartão${maxParcelas() > 1 ? ` em até ${maxParcelas()}x${semJuros() ? " sem juros" : ""}${minParcelas() ? ` para compras a partir de ${brl(minParcelas())}` : ""}` : " à vista"}.</div></div>`); }
+function rodape(){ if(!footEl) return; const old = document.getElementById("ljFoot"); if(old) old.remove(); footEl.insertAdjacentHTML("beforeend", `<div id="ljFoot" style="display:grid;gap:4px;font-size:12px;opacity:.9"><div>${esc(LOJA_ID)}</div><div><a href="#politicas" style="color:inherit;font-weight:700">Trocas, devoluções e privacidade</a></div><div>Frete: ${esc(regraFrete())} Pagamento: Pix ou cartão${maxParcelas() > 1 ? ` em até ${maxParcelas()}x${semJuros() ? " sem juros" : ""}${minParcelas() ? ` para compras a partir de ${brl(minParcelas())}` : ""}` : " à vista"}.</div></div>`); }
 rodape();
+
+/* ---------- políticas da loja (#politicas) ---------- */
+function abrirPoliticas(){
+  if(!criarPagina()) return;
+  const prazo = Number(CFG.loja.prazoEncomendaDias || 30);
+  abrirPagina("Políticas da loja", `
+    <div class="note" style="margin-top:0">Atualizado em 12/11/2026. Qualquer dúvida, chame no WhatsApp (48) 99124-5814.</div>
+
+    <span class="lbl">Quem vende</span>
+    <div class="lj-box"><b>NAZA Camisas Importadas</b>
+      <div class="note" style="margin-top:2px">${esc(LOJA_ID)}<br>Atendimento de segunda a sábado, pelo WhatsApp e pelo Instagram.</div></div>
+
+    <span class="lbl">Prazos de entrega</span>
+    <div class="lj-box">
+      <b>Pronta entrega</b><div class="note" style="margin-top:2px">Camisas que já estão aqui no Brasil. Postamos em até 2 dias úteis depois da confirmação do pagamento.</div>
+      <div class="lj-sp"></div>
+      <b>Sob encomenda</b><div class="note" style="margin-top:2px">Entrega em até ${prazo} dias após o pagamento. Antes de cobrar, conferimos a disponibilidade do modelo com o fornecedor — só depois dessa confirmação o pagamento é liberado para você. Se o modelo não estiver disponível, o pedido é cancelado sem custo nenhum.</div>
+      <div class="lj-sp"></div>
+      <b>Importação</b><div class="note" style="margin-top:2px">A importação é feita pela NAZA. Você compra de uma loja brasileira: <b>não há cobrança de imposto na entrega</b>. O valor que aparece no site (produto, personalização e frete) é o total que você paga.</div>
+    </div>
+
+    <span class="lbl">Arrependimento: 7 dias</span>
+    <div class="lj-box"><div class="note" style="margin-top:0">Por ser uma compra pela internet, você pode <b>desistir em até 7 dias corridos</b> contados do recebimento, sem precisar justificar (artigo 49 do Código de Defesa do Consumidor). Basta avisar pelo WhatsApp dentro desse prazo e devolver a camisa sem uso.<br><br>
+      Nesse caso devolvemos <b>tudo o que você pagou, inclusive o frete</b>, e o custo de nos enviar a peça de volta também é nosso. O estorno sai em até 10 dias depois de recebermos a camisa, pelo mesmo meio do pagamento (no cartão, pode aparecer na fatura seguinte).</div></div>
+
+    <span class="lbl">Camisa com defeito</span>
+    <div class="lj-box"><div class="note" style="margin-top:0">Se a camisa chegar com algum problema de fabricação, você tem <b>90 dias</b> para reclamar (artigo 26 do CDC). Mande fotos pelo WhatsApp que a gente resolve: troca pela mesma camisa, devolução do dinheiro ou abatimento no preço — você escolhe, e o frete é por nossa conta.<br><br>
+      Chegou a camisa errada ou faltando algo do pedido? Avise que corrigimos sem custo.</div></div>
+
+    <span class="lbl">Troca por tamanho</span>
+    <div class="lj-box"><div class="note" style="margin-top:0">Errou o tamanho? Isso não é obrigação legal, é cortesia nossa, e a gente faz com prazer: avise em <b>até 7 dias</b> do recebimento, com a camisa <b>sem uso e com a etiqueta</b>.<br><br>
+      A troca depende de termos o tamanho disponível — se não tivermos, devolvemos o valor da camisa. Nessa troca, <b>os fretes de ida e volta ficam por conta do cliente</b>. Camisas personalizadas com nome e número não têm troca por tamanho, porque são feitas exclusivamente para você.<br><br>
+      Na dúvida, confira a <b>tabela de medidas</b> na página inicial antes de comprar — ela evita quase toda troca.</div></div>
+
+    <span class="lbl">Pagamento</span>
+    <div class="lj-box"><div class="note" style="margin-top:0">Aceitamos <b>Pix</b> (na hora) e <b>cartão de crédito</b> pelo Mercado Pago${maxParcelas() > 1 ? `, à vista ou em até ${maxParcelas()}x${semJuros() ? " sem juros" : ""}${minParcelas() ? ` para compras a partir de ${brl(minParcelas())}` : ""}` : ", à vista"}. Também dá para pagar com Pix direto na nossa chave e enviar o comprovante pelo site.<br><br>
+      ${esc(regraFrete())} Nunca pedimos dados do seu cartão por WhatsApp nem por e-mail: o pagamento acontece só dentro do site ou do Mercado Pago.</div></div>
+
+    <span class="lbl">Privacidade e seus dados</span>
+    <div class="lj-box"><div class="note" style="margin-top:0">
+      <b>O que guardamos:</b> seu nome, e-mail, WhatsApp e endereço de entrega, além do histórico dos seus pedidos. Se você quiser, também o tamanho que veste e seu time do coração — isso é opcional e serve só para te atender melhor.<br><br>
+      <b>Para que usamos:</b> separar e entregar seu pedido, emitir a cobrança, falar com você sobre a compra e cumprir obrigações legais. <b>Não vendemos nem alugamos seus dados para ninguém.</b><br><br>
+      <b>Com quem compartilhamos:</b> apenas com quem é necessário para a compra acontecer — Mercado Pago (pagamento), Correios ou transportadora (entrega) e os serviços que hospedam o site, o banco de dados e os e-mails da loja. Cada um recebe só o mínimo necessário.<br><br>
+      <b>Seus direitos (LGPD):</b> você pode pedir a qualquer momento para ver, corrigir ou apagar seus dados, e para sair da nossa lista. É só chamar no WhatsApp ou responder qualquer e-mail da loja. Apagamos o que não formos obrigados a guardar por lei (notas e registros fiscais ficam pelo prazo legal).<br><br>
+      <b>Sua senha</b> é guardada criptografada — nem nós conseguimos ver. Nunca peça nem compartilhe sua senha com ninguém, inclusive com a gente.<br><br>
+      <b>Menores de 18 anos:</b> a compra deve ser feita por um responsável.</div></div>
+
+    <span class="lbl">Cancelamento do Box Retrô</span>
+    <div class="lj-box"><div class="note" style="margin-top:0">A assinatura é mensal e você cancela quando quiser, sem multa, pela área de assinaturas do seu Mercado Pago ou falando com a gente. O cancelamento vale para as próximas cobranças; a camisa do mês já pago é enviada normalmente. Por ser surpresa e personalizada, a box não tem troca por escolha de modelo — mas o direito de arrependimento de 7 dias e a garantia por defeito valem igual.</div></div>
+
+    <div class="lj-sp"></div>
+    <button type="button" class="btn ghost" id="ljVoltaLoja" style="max-width:320px">Voltar à loja</button>`);
+  if(pgConta) pgConta.dataset.pg = "politicas";
+  const b = document.getElementById("ljVoltaLoja"); if(b) b.addEventListener("click", fecharConta);
+  window.scrollTo(0, 0);
+}
 
 /* ---------- sessão e rotas por # ---------- */
 function rota(){
   const h = location.hash;
   if(h === "#nova-senha") return; // tratado no evento PASSWORD_RECOVERY
-  if(h === "#minha-conta"){ if(!contaAberta) abrirConta(); return; }
+  if(h === "#politicas"){ if(!(pgConta && !pgConta.hidden && pgConta.dataset.pg === "politicas")) abrirPoliticas(); return; }
+  if(h === "#minha-conta"){ if(!(pgConta && !pgConta.hidden && pgConta.dataset.pg === "conta")) abrirConta(); return; }
   const m = h.match(/^#pedido-(NZ\d+)$/); if(m) return abrirConta(m[1]);
   if(contaAberta) fecharConta();
 }
