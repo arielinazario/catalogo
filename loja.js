@@ -26,6 +26,7 @@ let user = null, cli = null, CFG = { loja: {}, pix: {} }, depoisLogin = null, pa
 const UFS = "AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO".split(" ");
 const TAMS = ["PP","P","M","G","GG","XGG","XXGG"];
 const ST = {
+  aguardando_disponibilidade: ["Conferindo disponibilidade","warn"],
   aguardando_pagamento: ["Aguardando pagamento","warn"], pagamento_em_analise: ["Pagamento em análise","warn"],
   pago: ["Pago","good"], em_producao: ["Em produção","good"], a_caminho: ["A caminho do Brasil","good"],
   aguardando_imposto: ["Na alfândega","warn"], postado: ["Postado","good"], entregue: ["Entregue","good"],
@@ -261,14 +262,15 @@ function abrirCheckout(){
     <span class="lbl">Entrega</span>
     <div class="lj-box">${user && perfilOk(cli) ? `<div class="r"><div><b>${esc(cli.nome)}</b><div class="note" style="margin-top:2px">${esc(cli.endereco)}, ${esc(cli.numero)}${cli.complemento ? " · " + esc(cli.complemento) : ""} · ${esc(cli.bairro)} · ${esc(cli.cidade)}/${esc(cli.uf)} · ${esc(cli.cep)}</div></div><button type="button" class="lj-link" id="ljEditEnd">Alterar</button></div>`
       : `<div class="note" style="margin:0">${user ? "Falta preencher seu endereço de entrega." : "Entre ou crie sua conta para informar o endereço e acompanhar o pedido."}</div>`}</div>
-    <div class="note">${encomenda ? `Camisas sob encomenda: entrega em até ${Number(CFG.loja.prazoEncomendaDias || 30)} dias após a confirmação do pagamento. Você acompanha cada etapa em Minha conta.` : "Pronta entrega: enviamos após a confirmação do pagamento."}</div>
-    <span class="lbl">Pagamento</span>
+    <div class="note">${encomenda ? `Camisas sob encomenda: primeiro conferimos a disponibilidade do modelo com o fornecedor. Só depois dessa confirmação o pagamento é liberado em Minha conta — entrega em até ${Number(CFG.loja.prazoEncomendaDias || 30)} dias após o pagamento.` : "Pronta entrega: enviamos após a confirmação do pagamento."}</div>
+    ${encomenda ? `<div class="lj-box" style="border-color:var(--wine)"><b>Você ainda não paga nada agora</b><div class="note" style="margin-top:2px">Ao enviar o pedido, conferimos a disponibilidade e avisamos você. O botão de pagamento aparece em <b>Minha conta</b> assim que liberarmos, e aí você escolhe cartão ou Pix.</div></div>`
+    : `<span class="lbl">Pagamento</span>
     <div class="lj-pay">
       <label><input type="radio" name="ljPag" value="mercadopago" ${pagamento==="mercadopago"?"checked":""}><span><b>Cartão de crédito ou Pix</b><small>Pelo Mercado Pago · crédito à vista ou em até ${Number(CFG.loja.parcelasMax || 2)}x sem juros · confirmação automática</small></span></label>
       ${pixOn ? `<label><input type="radio" name="ljPag" value="pix_chave" ${pagamento==="pix_chave"?"checked":""}><span><b>Pix direto para a loja</b><small>Você paga com a chave Pix e envia o comprovante · confirmamos em até 1 dia útil</small></span></label>` : ""}
-    </div>
+    </div>`}
     <div class="lj-err"></div><div style="height:14px"></div>
-    <button type="button" class="btn pri" id="ljFinal">${!user ? "Entrar para finalizar" : !perfilOk(cli) ? "Informar endereço" : "Finalizar compra · " + brl(tot)}</button>
+    <button type="button" class="btn pri" id="ljFinal">${!user ? "Entrar para finalizar" : !perfilOk(cli) ? "Informar endereço" : encomenda ? "Enviar pedido · " + brl(tot) : "Finalizar compra · " + brl(tot)}</button>
     <div style="height:8px"></div>
     <button type="button" class="btn ghost" data-close>Continuar comprando</button>
     <button type="button" class="rm" id="clearCart" style="display:block;margin:12px auto 0">Esvaziar carrinho</button>`);
@@ -291,10 +293,23 @@ async function finalizar(e){
     const r = await api("criar-pedido", { forma: pagamento, cupom: cupomOk() ? cupom : "", obs,
       itens: cart.map(c => ({ produto_id: c.id, tamanho: c.tamanho, qtd: 1, pers_nome: c.persNome || "", pers_num: c.persNum || "", patch: c.patch || "" })) });
     cart = []; cupom = ""; cupomMsg = ""; saveCart(); render();
+    if(r.aguardando_disponibilidade){ avisoDisponibilidade(r.pedido); return; }
     if(r.pagar_url){ ocupado(btn, true, "Abrindo o Mercado Pago…"); location.href = r.pagar_url; return; }
     if(r.pix){ abrirPix({ id: r.id, codigo: r.pedido, total: r.total }); return; }
     toast(r.aviso || "Pedido registrado."); abrirConta();
   } catch(err){ ocupado(btn, false); erro(err.message); }
+}
+
+function avisoDisponibilidade(codigo){
+  openSheet("Pedido enviado!", `
+    <div class="lj-box" style="border-color:var(--wine)"><b>Pedido ${esc(codigo)} registrado</b>
+      <div class="note" style="margin-top:4px">Agora conferimos a disponibilidade do modelo com o fornecedor. Assim que confirmarmos, <b>liberamos o pagamento</b> em Minha conta e avisamos você pelo WhatsApp.</div></div>
+    <div class="note">Nenhuma cobrança é feita antes dessa confirmação. Se o modelo não estiver disponível, o pedido é cancelado sem custo.</div>
+    <div class="lj-sp"></div>
+    <button type="button" class="btn pri" id="ljDispConta">Ver meu pedido</button>
+    <div style="height:8px"></div>
+    <button type="button" class="btn ghost" data-close>Continuar comprando</button>`);
+  document.getElementById("ljDispConta").addEventListener("click", () => abrirConta(codigo));
 }
 
 /* ---------- Pix direto ---------- */
@@ -404,6 +419,7 @@ function cartaoPedido(p, destaque){
   const st = ST[p.status] || [p.status, ""];
   const ev = (p.pedido_eventos || []).slice().sort((a, b) => a.criado_em.localeCompare(b.criado_em));
   const aguard = p.status === "aguardando_pagamento";
+  const emConf = p.status === "aguardando_disponibilidade";
   const pixOn = !!(CFG.pix && CFG.pix.ativo && CFG.pix.chave);
   return `<div class="lj-ped" id="ped-${esc(p.codigo)}" ${destaque === p.codigo ? 'style="border-color:var(--wine)"' : ""}>
     <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span class="t">Pedido ${esc(p.codigo)}</span><span class="lj-chip ${st[1]}">${st[0]}</span></div>
@@ -411,8 +427,10 @@ function cartaoPedido(p, destaque){
     ${(p.pedido_itens || []).map(i => `<div class="d">• ${esc(i.descricao)} · tam. ${esc(i.tamanho)}${i.pers_nome || i.pers_num ? " · " + esc([i.pers_nome, i.pers_num].filter(Boolean).join(" ")) : ""}${i.patch ? " · patch " + esc(i.patch) : ""}</div>`).join("")}
     ${p.rastreio ? `<div class="d" style="color:var(--ink)"><b>Rastreio:</b> ${esc(p.rastreio)} · <a href="https://rastreamento.correios.com.br/app/index.php" target="_blank" rel="noopener">acompanhar</a></div>` : ""}
     ${ev.length > 1 ? `<ul class="lj-tl">${ev.map(x => `<li>${dBR(x.criado_em)} · ${esc((ST[x.status] || [x.status])[0])}</li>`).join("")}</ul>` : ""}
-    ${aguard ? `<div class="lj-sp"></div>${p.forma_pagamento === "pix_chave" && pixOn ? `<button type="button" class="btn pri" data-lj-pix="${esc(p.id)}">Pagar com Pix / enviar comprovante</button><div style="height:6px"></div>` : ""}
-      <button type="button" class="btn ${p.forma_pagamento === "pix_chave" && pixOn ? "ghost" : "pri"}" data-lj-pagar="${esc(p.id)}">Pagar com cartão ou Pix (Mercado Pago)</button>
+    ${aguard ? `<div class="lj-sp"></div>${p.tipo !== "pronta" ? `<div class="note" style="margin-top:0"><b>Disponibilidade confirmada!</b> Pagamento liberado — é só escolher a forma abaixo.</div>` : ""}${pixOn ? `<button type="button" class="btn pri" data-lj-pix="${esc(p.id)}">Pagar com Pix / enviar comprovante</button><div style="height:6px"></div>` : ""}
+      <button type="button" class="btn ${pixOn ? "ghost" : "pri"}" data-lj-pagar="${esc(p.id)}">Pagar com cartão ou Pix (Mercado Pago)</button>
+      <button type="button" class="rm" data-lj-cancelar="${esc(p.id)}" style="display:block;margin:10px auto 0">Cancelar pedido</button>` : ""}
+    ${emConf ? `<div class="lj-sp"></div><div class="note" style="margin-top:0"><b>Pedido recebido!</b> Estamos conferindo a disponibilidade ${p.tipo === "misto" ? "das camisas sob encomenda" : "do modelo"} com o fornecedor. Assim que confirmarmos, o pagamento é liberado aqui e você recebe um aviso no WhatsApp. Nada é cobrado antes disso.</div>
       <button type="button" class="rm" data-lj-cancelar="${esc(p.id)}" style="display:block;margin:10px auto 0">Cancelar pedido</button>` : ""}
     ${p.status === "pagamento_em_analise" && p.pix_comprovante ? `<div class="note">Comprovante recebido. Assim que confirmarmos, o status muda para Pago.</div>` : ""}
   </div>`;
@@ -464,6 +482,12 @@ try { openItem = function(id){
 }; } catch(e){}
 // Box Retrô: troca o formulário antigo (WhatsApp) pelo de assinatura com conta
 document.addEventListener("click", e => { if(e.target.closest("#bxOpen")){ e.preventDefault(); e.stopImmediatePropagation(); abrirBox(); } }, true);
+// rolagem própria da grade: atalho para o restante da página
+const irFim = document.getElementById("irFim");
+if(irFim) irFim.addEventListener("click", () => {
+  const alvo = document.getElementById("medidas") || document.querySelector(".sobre") || document.querySelector("footer");
+  if(alvo) alvo.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 // botão de conta no topo
 const topActs = document.getElementById("topActs"), ig = document.querySelector(".ig");
 if(topActs) topActs.innerHTML = `<button type="button" class="tbtn pri" id="ljAcct">Entrar</button><button type="button" class="tbtn" id="ljCriar">Criar conta</button><button type="button" class="tbtn" id="ljSairTop" hidden>Sair</button>`;

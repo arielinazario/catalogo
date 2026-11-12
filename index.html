@@ -106,6 +106,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 .tot b{font-family:var(--display);font-size:26px;color:var(--wine)}
 
 /* grid */
+.gridbox{position:relative;border:1px solid var(--line);border-radius:16px;background:var(--surface2);padding:10px;max-height:min(74vh,980px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--wine) transparent;-webkit-overflow-scrolling:touch}
+.gridbox::-webkit-scrollbar{width:9px}
+.gridbox::-webkit-scrollbar-track{background:transparent}
+.gridbox::-webkit-scrollbar-thumb{background:#C9B4B8;border-radius:9px;border:2px solid var(--surface2)}
+.gridbox::-webkit-scrollbar-thumb:hover{background:var(--wine)}
+.gridfim{display:flex;justify-content:center;margin-top:10px}
+.gridfim button{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:8px 16px;font-weight:600;font-size:13px;cursor:pointer}
+.gridfim button:hover{border-color:var(--wine);color:var(--wine)}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 @media (min-width:640px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}}
 @media (min-width:920px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -256,8 +264,9 @@ button,input,select,textarea{font:inherit;color:inherit}
     </aside>
     <div>
       <div class="count" id="count"></div>
-      <main class="grid" id="grid"></main>
+      <div class="gridbox" id="gridbox"><main class="grid" id="grid"></main></div>
       <div class="empty" id="empty" hidden></div>
+      <div class="gridfim"><button type="button" id="irFim">Ver o restante da página ↓</button></div>
     </div>
   </div>
 
@@ -410,6 +419,9 @@ function render(){
       : `O catálogo está sendo atualizado.<br><br><a class="btn wa" style="max-width:320px;margin:0 auto" href="https://wa.me/${esc(DATA.whatsapp)}" target="_blank" rel="noopener">Fale com a gente no WhatsApp</a>`; }
   else if(!vis.length){ em.hidden = false; em.textContent = "Nenhuma camisa com esses filtros. Não achou seu time? Pergunte no WhatsApp que a gente busca."; }
   else em.hidden = true;
+  const gb = $("#gridbox");
+  if(gb){ gb.hidden = !vis.length; const sig = [aba, liga, time, cat, nq].join("|"); if(gb.dataset.sig !== sig){ gb.dataset.sig = sig; gb.scrollTop = 0; } }
+  const gf = document.querySelector(".gridfim"); if(gf) gf.hidden = !vis.length;
   const n = cart.length;
   $("#cartbar").hidden = !n; $("#cartN").textContent = n;
   $("#cartTxt").textContent = tipoCarrinho() === "estoque" ? "Minha lista · comprar" : "Minha lista · ver disponibilidade";
@@ -655,6 +667,6 @@ render();
 
 <script src="sb.js?v=1"></script>
 <script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"><\/script>')</script>
-<script src="loja.js?v=6"></script>
+<script src="loja.js?v=7"></script>
 </body>
 </html>
