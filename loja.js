@@ -146,7 +146,14 @@ function pixCopiaCola(valor, txid){
 }
 
 /* ---------- camisa de teste (aparece só para a dona da loja) ---------- */
-const EMAIL_TESTE = "arieli.nazario@icloud.com";
+// Por id da conta, não por e-mail: o loja.js é público e o e-mail não precisa ficar aqui.
+// Para liberar outra conta depois, basta acrescentar o id em config.loja.idsTeste (sem republicar o site).
+const IDS_TESTE = ["65cca294-0b02-4194-a2da-6099bc1a095d"];
+const podeVerTeste = () => {
+  if(!user) return false;
+  const extra = (CFG.loja && Array.isArray(CFG.loja.idsTeste)) ? CFG.loja.idsTeste : [];
+  return IDS_TESTE.concat(extra).includes(user.id);
+};
 const CAMISA_TESTE = { id: "teste-naza", time: "NAZA", modelo: "Camisa teste · R$ 5", liga: "Teste", categoria: "Tradicional",
   preco: 5, tamanhos: ["M"], descricao: "Produto só para testar o pagamento. Ninguém mais vê esta camisa.",
   destaque: false, foto: "logo.png", tipo: "estoque" };
@@ -154,7 +161,7 @@ const CAMISA_TESTE = { id: "teste-naza", time: "NAZA", modelo: "Camisa teste · 
 function camisaTeste(){
   if(typeof estoque === "undefined" || typeof TUDO === "undefined") return false;
   const dentro = estoque.some(x => x.id === CAMISA_TESTE.id);
-  const deve = !!user && String(user.email || "").toLowerCase() === EMAIL_TESTE;
+  const deve = podeVerTeste();
   if(deve === dentro) return false;
   if(deve){ estoque.unshift(CAMISA_TESTE); TUDO.push(CAMISA_TESTE); }
   else {
