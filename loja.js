@@ -51,6 +51,15 @@ const valorPatch = t => t && temPatchOnline() ? Number(CFG.loja.patchPreco) * co
 const naRegiao = c => !!(c && semAc(c.uf) === semAc(CFG.loja.freteGratisUF || "SC") && (CFG.loja.freteGratisCidades || []).map(semAc).includes(semAc(c.cidade)));
 // mesmo cálculo do servidor; null = ainda sem endereço
 const frete = base => { if(!user || !perfilOk(cli)) return null; if(naRegiao(cli)) return 0; if(CFG.loja.freteGratisAcima != null && base >= Number(CFG.loja.freteGratisAcima)) return 0; return Number(CFG.loja.freteFixo || 0); };
+const minParcelas = () => CFG.loja.parcelasMin == null ? 0 : Number(CFG.loja.parcelasMin);
+const maxParcelas = () => Number(CFG.loja.parcelasMax || 2);
+const textoParcelas = total => {
+  const mx = maxParcelas(), mn = minParcelas();
+  if(mx < 2) return "crédito à vista";
+  if(!mn) return `crédito à vista ou em até ${mx}x sem juros`;
+  return Number(total) >= mn ? `crédito à vista ou em até ${mx}x sem juros`
+    : `crédito à vista (parcelamento em ${mx}x a partir de ${brl(mn)})`;
+};
 const regraFrete = () => `Grátis para Criciúma e região${CFG.loja.freteGratisAcima != null ? ` e para pedidos a partir de ${brl(CFG.loja.freteGratisAcima)}` : ""}${CFG.loja.freteFixo ? `; demais: ${brl(CFG.loja.freteFixo)}` : ""}.`;
 const perfilOk = c => !!(c && c.nome && c.whatsapp && c.cep && c.endereco && c.numero && c.bairro && c.cidade && c.uf);
 
@@ -82,6 +91,8 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 .pgvolta{background:none;border:0;color:var(--wine);font-weight:700;cursor:pointer;padding:8px 0;font-size:14.5px}
 .pgconta .lbl{margin-top:22px}
 @media(min-width:760px){.pgconta .lj-ped,.pgconta .lj-box,.pgconta .lj-ficha{max-width:760px}}
+.pgconta .lj-filtros{margin:6px 0 4px;gap:7px}
+.pgconta .lj-filtros button{white-space:nowrap}
 .lj-ficha{display:flex;gap:14px;align-items:stretch;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:13px 14px;margin-top:8px}
 .lj-ficha-dados{flex:1;min-width:0}
 .lj-ficha.tem-time{border-color:var(--tc);border-left:6px solid var(--tc);background:
@@ -448,7 +459,7 @@ function abrirCheckout(){
     ${encomenda ? `<div class="lj-box" style="border-color:var(--wine)"><b>Você ainda não paga nada agora</b><div class="note" style="margin-top:2px">Ao enviar o pedido, conferimos a disponibilidade e avisamos você. O botão de pagamento aparece em <b>Minha conta</b> assim que liberarmos, e aí você escolhe cartão ou Pix.</div></div>`
     : `<span class="lbl">Pagamento</span>
     <div class="lj-pay">
-      <label><input type="radio" name="ljPag" value="mercadopago" ${pagamento==="mercadopago"?"checked":""}><span><b>Cartão de crédito ou Pix</b><small>Pelo Mercado Pago · crédito à vista ou em até ${Number(CFG.loja.parcelasMax || 2)}x sem juros · confirmação automática</small></span></label>
+      <label><input type="radio" name="ljPag" value="mercadopago" ${pagamento==="mercadopago"?"checked":""}><span><b>Cartão de crédito ou Pix</b><small>Pelo Mercado Pago · ${textoParcelas(tot)} · confirmação automática</small></span></label>
       ${pixOn ? `<label><input type="radio" name="ljPag" value="pix_chave" ${pagamento==="pix_chave"?"checked":""}><span><b>Pix direto para a loja</b><small>Você paga com a chave Pix e envia o comprovante · confirmamos em até 1 dia útil</small></span></label>` : ""}
     </div>`}
     <div class="lj-err"></div><div style="height:14px"></div>
@@ -528,6 +539,16 @@ function abrirPix(p){
 /* ---------- minha conta ---------- */
 /* ---------- minha conta: página própria ---------- */
 let pgConta = null, contaAberta = false;
+let PEDS = [], PED_DESTAQUE = "", pedFiltro = "todos";
+const GRUPOS_PED = [
+  ["todos", "Todos", null],
+  ["aguardando", "Aguardando", ["aguardando_disponibilidade", "aguardando_pagamento", "pagamento_em_analise"]],
+  ["pago", "Pagos", ["pago"]],
+  ["andamento", "Em andamento", ["em_producao", "a_caminho", "aguardando_imposto", "postado"]],
+  ["entregue", "Entregues", ["entregue"]],
+  ["cancelado", "Cancelados", ["cancelado", "reembolsado"]],
+];
+const contaGrupo = g => (g[2] ? PEDS.filter(p => g[2].includes(p.status)) : PEDS).length;
 const PARTES_LOJA = ["header.hero", ".boxretro", ".tabs", ".layout", ".medidas", ".sobre", ".cartbar"];
 function criarPagina(){
   if(pgConta) return pgConta;
@@ -570,10 +591,13 @@ async function abrirConta(destaque){
   if(location.hash !== "#minha-conta" && !destaque) history.replaceState(null, "", "#minha-conta");
   await carregarCliente();
   const [{ data: peds }, { data: ass }] = await Promise.all([
-    sb.from("pedidos").select("id,codigo,status,tipo,forma_pagamento,total,criado_em,rastreio,pix_comprovante,pedido_itens(descricao,tamanho,qtd,pers_nome,pers_num,patch,total),pedido_eventos(status,criado_em)").order("criado_em", { ascending: false }).limit(50),
+    sb.from("pedidos").select("id,codigo,status,tipo,forma_pagamento,total,criado_em,rastreio,pix_comprovante,mp_tipo,mp_parcelas,pago_em,pedido_itens(descricao,tamanho,qtd,pers_nome,pers_num,patch,total),pedido_eventos(status,criado_em)").order("criado_em", { ascending: false }).limit(50),
     sb.from("assinaturas").select("id,status,tamanho,time_coracao,valor,inicio,criado_em").neq("status", "cancelado").order("criado_em", { ascending: false })
   ]);
   if(!contaAberta) return;
+  PEDS = peds || []; PED_DESTAQUE = destaque || "";
+  if(PED_DESTAQUE) pedFiltro = "todos";
+  if(!GRUPOS_PED.some(g => g[0] === pedFiltro && (!g[2] || contaGrupo(g)))) pedFiltro = "todos";
   const c = cli || {};
   const tm = achaTime(c.time_coracao), cor = corTime(tm);
   abrirPagina("Minha conta", `
@@ -591,22 +615,45 @@ async function abrirConta(destaque){
       <div class="d">Tam. ${esc(a.tamanho)}${a.time_coracao ? " · " + esc(a.time_coracao) : ""} · ${brl(a.valor)}/mês${a.inicio ? " · desde " + dBR(a.inicio + "T12:00") : ""}</div>
       ${a.status === "aguardando_pagamento" ? `<div class="note">Ainda não recebemos a confirmação do Mercado Pago. Se você não concluiu, assine de novo pelo banner do Box Retrô.</div>` : `<div class="note">Para pausar ou cancelar, use a área de assinaturas do seu Mercado Pago ou fale com a loja.</div>`}</div>`).join("")}
     <span class="lbl">Meus pedidos</span>
-    ${(peds || []).length ? peds.map(p => cartaoPedido(p, destaque)).join("") : `<div class="note">Você ainda não fez pedidos pelo site.</div>`}
+    ${PEDS.length > 1 ? `<div class="chips lj-filtros">${GRUPOS_PED.filter(g => !g[2] || contaGrupo(g)).map(g => `<button type="button" data-pedfil="${g[0]}" aria-pressed="${pedFiltro === g[0]}">${g[1]} ${contaGrupo(g)}</button>`).join("")}</div>` : ""}
+    <div id="ljPeds">${PEDS.length ? "" : `<div class="note">Você ainda não fez pedidos pelo site.</div>`}</div>
     <div class="lj-sp"></div><div class="lj-sp"></div>
     <button type="button" class="btn ghost" id="ljSair" style="max-width:320px">Sair da conta</button>`);
   document.getElementById("ljMeusDados").addEventListener("click", () => abrirDados(() => abrirConta()));
   const bt = document.getElementById("ljEscolheTime"); if(bt) bt.addEventListener("click", () => abrirDados(() => abrirConta()));
   document.getElementById("ljSair").addEventListener("click", sair);
-  document.querySelectorAll("[data-lj-pagar]").forEach(b => b.addEventListener("click", async e => {
+  document.querySelectorAll("[data-pedfil]").forEach(b => b.addEventListener("click", () => { pedFiltro = b.dataset.pedfil; pintaPedidos(); }));
+  pintaPedidos();
+  if(destaque){ const el = document.getElementById("ped-" + destaque); if(el) el.scrollIntoView({ block: "center" }); }
+}
+function pintaPedidos(){
+  const box = document.getElementById("ljPeds"); if(!box || !PEDS.length) return;
+  const g = GRUPOS_PED.find(x => x[0] === pedFiltro) || GRUPOS_PED[0];
+  const lista = g[2] ? PEDS.filter(p => g[2].includes(p.status)) : PEDS;
+  box.innerHTML = lista.length ? lista.map(p => cartaoPedido(p, PED_DESTAQUE)).join("")
+    : `<div class="note">Nenhum pedido nessa situação.</div>`;
+  document.querySelectorAll("[data-pedfil]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.pedfil === pedFiltro)));
+  box.querySelectorAll("[data-lj-pagar]").forEach(b => b.addEventListener("click", async e => {
     ocupado(e.currentTarget, true, "Abrindo o Mercado Pago…");
     try { const r = await api("pagar", { id: b.dataset.ljPagar }); location.href = r.pagar_url; } catch(err){ ocupado(e.currentTarget, false); toast(err.message); }
   }));
-  document.querySelectorAll("[data-lj-pix]").forEach(b => b.addEventListener("click", () => { const p = peds.find(x => x.id === b.dataset.ljPix); abrirPix({ id: p.id, codigo: p.codigo, total: p.total }); }));
-  document.querySelectorAll("[data-lj-cancelar]").forEach(b => b.addEventListener("click", async e => {
+  box.querySelectorAll("[data-lj-pix]").forEach(b => b.addEventListener("click", () => {
+    const p = PEDS.find(x => x.id === b.dataset.ljPix); if(p) abrirPix({ id: p.id, codigo: p.codigo, total: p.total });
+  }));
+  box.querySelectorAll("[data-lj-cancelar]").forEach(b => b.addEventListener("click", async e => {
     if(e.currentTarget.dataset.confirma !== "1"){ e.currentTarget.dataset.confirma = "1"; e.currentTarget.textContent = "Toque de novo para cancelar"; return; }
     try { await api("cancelar-pedido", { id: b.dataset.ljCancelar }); toast("Pedido cancelado."); abrirConta(); } catch(err){ toast(err.message); }
   }));
-  if(destaque){ const el = document.getElementById("ped-" + destaque); if(el) el.scrollIntoView({ block: "center" }); }
+}
+// texto da forma de pagamento do pedido
+function comoPagou(p){
+  if(p.forma_pagamento === "pix_chave") return "Pix direto para a loja";
+  const t = p.mp_tipo, n = Number(p.mp_parcelas) || 1;
+  if(t === "credit_card") return "Cartão de crédito" + (n > 1 ? ` · ${n}x sem juros` : " · à vista") + " (Mercado Pago)";
+  if(t === "debit_card") return "Cartão de débito (Mercado Pago)";
+  if(t === "bank_transfer" || t === "account_money") return "Pix pelo Mercado Pago";
+  if(t) return "Mercado Pago";
+  return "Cartão ou Pix pelo Mercado Pago";
 }
 function cartaoPedido(p, destaque){
   const st = ST[p.status] || [p.status, ""];
@@ -617,6 +664,7 @@ function cartaoPedido(p, destaque){
   return `<div class="lj-ped" id="ped-${esc(p.codigo)}" ${destaque === p.codigo ? 'style="border-color:var(--wine)"' : ""}>
     <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span class="t">Pedido ${esc(p.codigo)}</span><span class="lj-chip ${st[1]}">${st[0]}</span></div>
     <div class="d">${dBR(p.criado_em)} · ${brl(p.total)} · ${p.tipo === "pronta" ? "pronta entrega" : p.tipo === "encomenda" ? "sob encomenda" : "pronta entrega + encomenda"}</div>
+    <div class="d"><b>Pagamento:</b> ${esc(comoPagou(p))}${p.pago_em ? " · pago em " + dBR(p.pago_em) : ""}</div>
     ${(p.pedido_itens || []).map(i => `<div class="d">• ${esc(i.descricao)} · tam. ${esc(i.tamanho)}${i.pers_nome || i.pers_num ? " · " + esc([i.pers_nome, i.pers_num].filter(Boolean).join(" ")) : ""}${i.patch ? " · patch " + esc(i.patch) : ""}</div>`).join("")}
     ${p.rastreio ? `<div class="d" style="color:var(--ink)"><b>Rastreio:</b> ${esc(p.rastreio)} · <a href="https://rastreamento.correios.com.br/app/index.php" target="_blank" rel="noopener">acompanhar</a></div>` : ""}
     ${ev.length > 1 ? `<ul class="lj-tl">${ev.map(x => `<li>${dBR(x.criado_em)} · ${esc((ST[x.status] || [x.status])[0])}</li>`).join("")}</ul>` : ""}
@@ -695,7 +743,7 @@ document.addEventListener("click", e => {
 // textos de WhatsApp no rodapé
 const foot = document.querySelector(".foot div"); if(foot) foot.textContent = "NAZA Camisas Importadas · compre pelo site · dúvidas pelo WhatsApp";
 const footEl = document.querySelector(".foot");
-function rodape(){ if(!footEl) return; const old = document.getElementById("ljFoot"); if(old) old.remove(); footEl.insertAdjacentHTML("beforeend", `<div id="ljFoot" style="display:grid;gap:4px;font-size:12px;opacity:.9"><div>${esc(LOJA_ID)}</div><div>Frete: ${esc(regraFrete())} Pagamento: cartão em até ${Number(CFG.loja.parcelasMax || 2)}x sem juros ou Pix.</div></div>`); }
+function rodape(){ if(!footEl) return; const old = document.getElementById("ljFoot"); if(old) old.remove(); footEl.insertAdjacentHTML("beforeend", `<div id="ljFoot" style="display:grid;gap:4px;font-size:12px;opacity:.9"><div>${esc(LOJA_ID)}</div><div>Frete: ${esc(regraFrete())} Pagamento: Pix ou cartão${maxParcelas() > 1 ? ` em até ${maxParcelas()}x sem juros${minParcelas() ? ` para compras a partir de ${brl(minParcelas())}` : ""}` : " à vista"}.</div></div>`); }
 rodape();
 
 /* ---------- sessão e rotas por # ---------- */
