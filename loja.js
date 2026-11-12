@@ -81,7 +81,22 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 .pgconta h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,6vw,34px);text-transform:uppercase;letter-spacing:.02em;margin:2px 0 12px}
 .pgvolta{background:none;border:0;color:var(--wine);font-weight:700;cursor:pointer;padding:8px 0;font-size:14.5px}
 .pgconta .lbl{margin-top:22px}
-@media(min-width:760px){.pgconta .lj-ped,.pgconta .lj-box{max-width:760px}}
+@media(min-width:760px){.pgconta .lj-ped,.pgconta .lj-box,.pgconta .lj-ficha{max-width:760px}}
+.lj-ficha{display:flex;gap:14px;align-items:stretch;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:13px 14px;margin-top:8px}
+.lj-ficha-dados{flex:1;min-width:0}
+.lj-ficha.tem-time{border-color:var(--tc);border-left:6px solid var(--tc);background:
+  linear-gradient(100deg, color-mix(in srgb, var(--tc) 9%, var(--surface)) 0%, var(--surface) 62%)}
+.lj-ficha.tem-time b{color:var(--tc)}
+.lj-ficha-escudo{display:grid;place-items:center;gap:5px;flex:none;padding-left:6px;border-left:1px dashed var(--line)}
+.lj-ficha-escudo small{font-family:var(--display);font-weight:700;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tc);text-align:center;max-width:116px;line-height:1.15}
+.lj-escudo{display:block;filter:drop-shadow(0 2px 4px rgba(46,6,12,.22))}
+.lj-tag{display:inline-block;margin:8px 6px 0 0;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  background:var(--surface2);color:var(--muted);border-radius:7px;padding:4px 9px}
+.lj-ficha.tem-time .lj-tag.time{background:var(--tc);color:#FFFFFF}
+@media(max-width:560px){.lj-ficha{flex-direction:column-reverse;align-items:center;text-align:center}
+  .lj-ficha-dados{width:100%}
+  .lj-ficha-escudo{border-left:0;border-bottom:1px dashed var(--line);padding:0 0 10px;width:100%}
+  .lj-ficha .r{flex-direction:column;gap:6px;align-items:center}}
 .lj-sp{height:10px}.lj-link{background:none;border:0;color:var(--wine);font-weight:700;cursor:pointer;padding:0;text-decoration:underline}
 </style>`);
 
@@ -128,6 +143,101 @@ function pixCopiaCola(valor, txid){
         + tlv("62", tlv("05", semAcento(txid).replace(/ /g, "").slice(0, 25) || "***"));
   p += "6304"; return p + crc16(p);
 }
+
+/* ---------- times do coração (Séries A e B de 2026) ---------- */
+// Escudos oficiais são marcas registradas dos clubes: aqui usamos um brasão próprio,
+// desenhado com as cores e o padrão de cada time, nunca o escudo do clube.
+const TIMES = [
+  ["América Mineiro","listras",["#0A6B3B","#FFFFFF"]],
+  ["Athletic","listras",["#111111","#FFFFFF"]],
+  ["Athletico Paranaense","listras",["#C8102E","#111111"]],
+  ["Atlético Goianiense","listras",["#D32027","#111111"]],
+  ["Atlético Mineiro","listras",["#111111","#FFFFFF"]],
+  ["Avaí","listras",["#0B3C8C","#FFFFFF"]],
+  ["Bahia","faixas",["#0B3C8C","#FFFFFF","#D7262F"]],
+  ["Botafogo","listras",["#111111","#FFFFFF"]],
+  ["Botafogo-SP","listras",["#111111","#FFFFFF"]],
+  ["Ceará","listras",["#111111","#FFFFFF"]],
+  ["Chapecoense","faixa",["#0A5D2E","#FFFFFF"]],
+  ["Corinthians","listras",["#111111","#FFFFFF"]],
+  ["Coritiba","listras",["#0B5B33","#FFFFFF"]],
+  ["CRB","faixas",["#D32027","#FFFFFF","#111111"]],
+  ["Criciúma","listras",["#F2C200","#111111"]],
+  ["Cruzeiro","liso",["#1C3F94","#FFFFFF"]],
+  ["Cuiabá","faixa",["#006B3F","#D4A017"]],
+  ["Flamengo","faixas",["#C52613","#111111","#C52613"]],
+  ["Fluminense","listras",["#7A1128","#0C7A4B","#FFFFFF"]],
+  ["Fortaleza","faixas",["#0B3C8C","#FFFFFF","#D7262F"]],
+  ["Goiás","faixa",["#0A7A3C","#FFFFFF"]],
+  ["Grêmio","listras",["#2E7DBA","#111111","#FFFFFF"]],
+  ["Internacional","liso",["#D2232A","#FFFFFF"]],
+  ["Juventude","listras",["#0B6B3A","#FFFFFF"]],
+  ["Londrina","faixa",["#0B3C8C","#FFFFFF"]],
+  ["Mirassol","faixa",["#F4C300","#0E6E3A"]],
+  ["Náutico","listras",["#D32027","#FFFFFF"]],
+  ["Novorizontino","faixa",["#0E6E3A","#F2C200"]],
+  ["Operário Ferroviário","listras",["#111111","#FFFFFF"]],
+  ["Palmeiras","liso",["#006437","#FFFFFF"]],
+  ["Ponte Preta","listras",["#111111","#FFFFFF"]],
+  ["Red Bull Bragantino","faixa",["#FFFFFF","#E2232E"]],
+  ["Remo","faixa",["#0A2C6B","#FFFFFF"]],
+  ["Santos","faixa",["#FFFFFF","#111111"]],
+  ["São Bernardo","faixa",["#F2C200","#0B3C8C"]],
+  ["São Paulo","faixas",["#FFFFFF","#D7262F","#111111"]],
+  ["Sport","listras",["#D32027","#111111"]],
+  ["Vasco da Gama","diagonal",["#111111","#FFFFFF"]],
+  ["Vila Nova","listras",["#D32027","#FFFFFF"]],
+  ["Vitória","listras",["#D32027","#111111"]],
+].map(([n, p, c]) => ({ n, p, c })).sort((a, b) => a.n.localeCompare(b.n, "pt-BR"));
+// aceita o que já estava escrito à mão ("Santos Futebol Clube", "Vasco", "Inter"…)
+const achaTime = nome => {
+  const q = semAc(nome); if(!q) return null;
+  const exato = TIMES.find(t => semAc(t.n) === q); if(exato) return exato;
+  return TIMES.filter(t => { const n = semAc(t.n); return q.includes(n) || n.includes(q); })
+              .sort((a, b) => semAc(b.n).length - semAc(a.n).length)[0] || null;
+};
+const claro = hex => { const n = parseInt(String(hex).slice(1), 16); return (((n >> 16) & 255) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 > 190; };
+// cor que funciona como destaque (evita branco puro)
+const corTime = t => t ? (claro(t.c[0]) ? (t.c[1] && !claro(t.c[1]) ? t.c[1] : "#5E0810") : t.c[0]) : "";
+function escudoSVG(t, tam){
+  if(!t) return "";
+  const [a, b, c] = [t.c[0], t.c[1] || t.c[0], t.c[2] || t.c[0]];
+  let dentro = "";
+  if(t.p === "listras"){ const n = 6, w = 100 / n;
+    for(let i = 0; i < n; i++) dentro += `<rect x="${i*w}" y="0" width="${w}" height="112" fill="${i%2?b:a}"/>`;
+    if(t.c[2]) dentro += `<rect x="0" y="0" width="100" height="112" fill="none"/>`;
+  } else if(t.p === "faixas"){
+    dentro = `<rect width="100" height="112" fill="${a}"/><rect y="37" width="100" height="38" fill="${b}"/>` + (t.c[2] ? `<rect y="75" width="100" height="37" fill="${c}"/>` : "");
+  } else if(t.p === "faixa"){
+    dentro = `<rect width="100" height="112" fill="${a}"/><rect y="42" width="100" height="26" fill="${b}"/>`;
+  } else if(t.p === "diagonal"){
+    dentro = `<rect width="100" height="112" fill="${a}"/><path d="M-10 86 L74 -10 L100 10 L16 112 Z" fill="${b}"/>`;
+  } else {
+    dentro = `<rect width="100" height="112" fill="${a}"/>`;
+  }
+  const id = "esc" + Math.random().toString(36).slice(2, 8);
+  const forma = "M6 6h88v50c0 27-27 42-44 50C33 98 6 83 6 56z";
+  return `<svg class="lj-escudo" viewBox="0 0 100 112" width="${tam||86}" aria-hidden="true">
+    <defs><clipPath id="${id}"><path d="${forma}"/></clipPath></defs>
+    <g clip-path="url(#${id})">${dentro}</g>
+    <path d="${forma}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="5"/>
+    <path d="${forma}" fill="none" stroke="#FFFFFF" stroke-width="2"/></svg>`;
+}
+function selectTime(id, valor){
+  const t = achaTime(valor), outro = !t && !!String(valor || "").trim();
+  return `<select class="in" id="${id}" data-time-sel>
+      <option value="">—</option>
+      ${TIMES.map(x => `<option ${t && t.n === x.n ? "selected" : ""}>${esc(x.n)}</option>`).join("")}
+      <option value="__outro" ${outro ? "selected" : ""}>Outro (escrever)</option>
+    </select>
+    <input class="in" id="${id}Outro" placeholder="Qual é o seu time?" value="${outro ? esc(valor) : ""}" style="text-transform:none;margin-top:6px" ${outro ? "" : "hidden"}>`;
+}
+function ligaTime(id){
+  const s = document.getElementById(id), o = document.getElementById(id + "Outro");
+  if(!s || !o) return;
+  s.addEventListener("change", () => { o.hidden = s.value !== "__outro"; if(!o.hidden) o.focus(); });
+}
+const lerTime = id => { const s = document.getElementById(id); if(!s) return ""; return s.value === "__outro" ? val(id + "Outro") : s.value; };
 
 /* ---------- conta: entrar / criar conta / senha ---------- */
 function abrirLogin(modo, depois){
@@ -238,9 +348,10 @@ function abrirDados(depois){
     <div class="lj-g3"><div><span class="lbl">Cidade</span><input class="in" id="ljCid" autocomplete="address-level2" value="${esc(c.cidade)}" style="text-transform:none"></div>
     <div><span class="lbl">UF</span><select class="in" id="ljUf"><option value=""></option>${UFS.map(u => `<option ${c.uf===u?"selected":""}>${u}</option>`).join("")}</select></div></div>
     <div class="lj-g2"><div><span class="lbl">Tamanho que veste</span><select class="in" id="ljTam"><option value="">—</option>${TAMS.map(t => `<option ${c.tamanho===t?"selected":""}>${t}</option>`).join("")}</select></div>
-    <div><span class="lbl">Time do coração</span><input class="in" id="ljTime" value="${esc(c.time_coracao)}" style="text-transform:none"></div></div>
+    <div><span class="lbl">Time do coração</span>${selectTime("ljTime", c.time_coracao)}</div></div>
     <div class="lj-err"></div><div class="lj-sp"></div>
     <button type="button" class="btn pri" id="ljSalvar">${depois ? "Salvar e continuar" : "Salvar"}</button>`);
+  ligaTime("ljTime");
   const cep = document.getElementById("ljCep");
   cep.addEventListener("input", async () => {
     const d = cep.value.replace(/\D/g, "").slice(0, 8); cep.value = d.length > 5 ? d.slice(0,5) + "-" + d.slice(5) : d;
@@ -254,7 +365,7 @@ function abrirDados(depois){
   });
   document.getElementById("ljSalvar").addEventListener("click", async e => {
     const d = { id: user.id, nome: val("ljNome"), whatsapp: val("ljWa"), cep: val("ljCep"), endereco: val("ljEnd"), numero: val("ljNum"),
-      complemento: val("ljComp"), bairro: val("ljBairro"), cidade: val("ljCid"), uf: val("ljUf"), tamanho: val("ljTam"), time_coracao: val("ljTime"),
+      complemento: val("ljComp"), bairro: val("ljBairro"), cidade: val("ljCid"), uf: val("ljUf"), tamanho: val("ljTam"), time_coracao: lerTime("ljTime"),
       atualizado_em: new Date().toISOString() };
     if(!cli) d.aceite_termos_em = new Date().toISOString();
     if(d.nome.split(" ").filter(Boolean).length < 2) return erro("Informe nome e sobrenome.");
@@ -425,8 +536,18 @@ async function abrirConta(destaque){
   ]);
   if(!contaAberta) return;
   const c = cli || {};
+  const tm = achaTime(c.time_coracao), cor = corTime(tm);
   abrirPagina("Minha conta", `
-    <div class="lj-box"><div class="r"><div><b>${esc(c.nome || user.email)}</b><div class="note" style="margin-top:2px">${esc(user.email)}${perfilOk(c) ? "<br>" + esc(c.endereco) + ", " + esc(c.numero) + (c.complemento ? " · " + esc(c.complemento) : "") + " · " + esc(c.bairro) + " · " + esc(c.cidade) + "/" + esc(c.uf) + " · " + esc(c.cep) : ""}</div></div><button type="button" class="lj-link" id="ljMeusDados">${perfilOk(c) ? "Alterar" : "Completar dados"}</button></div></div>
+    <div class="lj-ficha${tm ? " tem-time" : ""}"${tm ? ` style="--tc:${cor};--tc2:${tm.c[1] || cor}"` : ""}>
+      <div class="lj-ficha-dados">
+        <div class="r"><div><b>${esc(c.nome || user.email)}</b>
+          <div class="note" style="margin-top:2px">${esc(user.email)}${perfilOk(c) ? "<br>" + esc(c.endereco) + ", " + esc(c.numero) + (c.complemento ? " · " + esc(c.complemento) : "") + " · " + esc(c.bairro) + " · " + esc(c.cidade) + "/" + esc(c.uf) + " · " + esc(c.cep) : ""}</div></div>
+          <button type="button" class="lj-link" id="ljMeusDados">${perfilOk(c) ? "Alterar" : "Completar dados"}</button></div>
+        ${c.tamanho ? `<span class="lj-tag">Veste ${esc(c.tamanho)}</span>` : ""}
+        ${c.time_coracao ? `<span class="lj-tag time">${esc(c.time_coracao)}</span>` : `<button type="button" class="lj-link" id="ljEscolheTime">Escolher meu time do coração</button>`}
+      </div>
+      ${tm ? `<div class="lj-ficha-escudo">${escudoSVG(tm, 104)}<small>${esc(tm.n)}</small></div>` : ""}
+    </div>
     ${(ass || []).map(a => `<div class="lj-ped"><div class="r" style="display:flex;justify-content:space-between;gap:8px"><span class="t">Box Retrô · assinatura</span><span class="lj-chip ${AS_ST[a.status][1]}">${AS_ST[a.status][0]}</span></div>
       <div class="d">Tam. ${esc(a.tamanho)}${a.time_coracao ? " · " + esc(a.time_coracao) : ""} · ${brl(a.valor)}/mês${a.inicio ? " · desde " + dBR(a.inicio + "T12:00") : ""}</div>
       ${a.status === "aguardando_pagamento" ? `<div class="note">Ainda não recebemos a confirmação do Mercado Pago. Se você não concluiu, assine de novo pelo banner do Box Retrô.</div>` : `<div class="note">Para pausar ou cancelar, use a área de assinaturas do seu Mercado Pago ou fale com a loja.</div>`}</div>`).join("")}
@@ -435,6 +556,7 @@ async function abrirConta(destaque){
     <div class="lj-sp"></div><div class="lj-sp"></div>
     <button type="button" class="btn ghost" id="ljSair" style="max-width:320px">Sair da conta</button>`);
   document.getElementById("ljMeusDados").addEventListener("click", () => abrirDados(() => abrirConta()));
+  const bt = document.getElementById("ljEscolheTime"); if(bt) bt.addEventListener("click", () => abrirDados(() => abrirConta()));
   document.getElementById("ljSair").addEventListener("click", sair);
   document.querySelectorAll("[data-lj-pagar]").forEach(b => b.addEventListener("click", async e => {
     ocupado(e.currentTarget, true, "Abrindo o Mercado Pago…");
@@ -477,18 +599,19 @@ function abrirBox(){
     <div class="pbig" style="margin-top:0">${brl(preco)}<small style="font-size:15px">/mês</small></div>
     <div class="note" style="margin-top:0">Todo mês uma camisa retrô de manga curta, personalizada com nome e número de um craque. É surpresa: você só descobre quando abrir.</div>
     <span class="lbl">Tamanho</span><select class="in" id="ljBxTam"><option value="">Escolha</option>${["P","M","G","GG","XGG","XXGG"].map(t => `<option ${cli.tamanho===t?"selected":""}>${t}</option>`).join("")}</select>
-    <span class="lbl">Time do coração</span><input class="in" id="ljBxTime" value="${esc(cli.time_coracao)}" placeholder="Ex.: Flamengo, Real Madrid…" style="text-transform:none">
+    <span class="lbl">Time do coração</span>${selectTime("ljBxTime", cli.time_coracao)}
     <div class="lj-box"><b>Entrega</b><div class="note" style="margin-top:2px">${esc(cli.endereco)}, ${esc(cli.numero)} · ${esc(cli.cidade)}/${esc(cli.uf)} · <button type="button" class="lj-link" id="ljBxEnd">alterar</button></div></div>
     <label class="lj-chk"><input type="checkbox" id="ljBxOk"><span>Entendi que a box é <b>surpresa e personalizada</b> e que a cobrança é <b>mensal de ${brl(preco)} no cartão</b>, renovada automaticamente até eu cancelar.</span></label>
     <div class="note">No Mercado Pago, use o mesmo e-mail da sua conta aqui (<b>${esc(user.email)}</b>), senão o pagamento é recusado.</div>
     <div class="lj-err"></div><div class="lj-sp"></div>
     <button type="button" class="btn pri" id="ljBxGo">Assinar pelo Mercado Pago</button>`);
+  ligaTime("ljBxTime");
   document.getElementById("ljBxEnd").addEventListener("click", () => abrirDados(abrirBox));
   document.getElementById("ljBxGo").addEventListener("click", async e => {
     const tamanho = val("ljBxTam"); if(!tamanho) return erro("Escolha o tamanho.");
     if(!document.getElementById("ljBxOk").checked) return erro("Marque que você entendeu como funciona a box.");
     ocupado(e.currentTarget, true, "Abrindo o Mercado Pago…");
-    try { const r = await api("assinar-box", { tamanho, time_coracao: val("ljBxTime") }); location.href = r.pagar_url; }
+    try { const r = await api("assinar-box", { tamanho, time_coracao: lerTime("ljBxTime") }); location.href = r.pagar_url; }
     catch(err){ ocupado(e.currentTarget, false); erro(err.message); }
   });
 }
