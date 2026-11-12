@@ -90,6 +90,7 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 .lj-ficha-escudo{display:grid;place-items:center;gap:5px;flex:none;padding-left:6px;border-left:1px dashed var(--line)}
 .lj-ficha-escudo small{font-family:var(--display);font-weight:700;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tc);text-align:center;max-width:116px;line-height:1.15}
 .lj-escudo{display:block;filter:drop-shadow(0 2px 4px rgba(46,6,12,.22))}
+.lj-escudo.img{width:104px;height:104px;object-fit:contain}
 .lj-tag{display:inline-block;margin:8px 6px 0 0;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
   background:var(--surface2);color:var(--muted);border-radius:7px;padding:4px 9px}
 .lj-ficha.tem-time .lj-tag.time{background:var(--tc);color:#FFFFFF}
@@ -148,47 +149,52 @@ function pixCopiaCola(valor, txid){
 // Escudos oficiais são marcas registradas dos clubes: aqui usamos um brasão próprio,
 // desenhado com as cores e o padrão de cada time, nunca o escudo do clube.
 const TIMES = [
-  ["América Mineiro","listras",["#0A6B3B","#FFFFFF"]],
+  ["ABC","listras",["#111111","#FFFFFF"],"abc-rn"],
+  ["América Mineiro","listras",["#0A6B3B","#FFFFFF"],"america-mineiro"],
   ["Athletic","listras",["#111111","#FFFFFF"]],
-  ["Athletico Paranaense","listras",["#C8102E","#111111"]],
-  ["Atlético Goianiense","listras",["#D32027","#111111"]],
-  ["Atlético Mineiro","listras",["#111111","#FFFFFF"]],
-  ["Avaí","listras",["#0B3C8C","#FFFFFF"]],
-  ["Bahia","faixas",["#0B3C8C","#FFFFFF","#D7262F"]],
-  ["Botafogo","listras",["#111111","#FFFFFF"]],
-  ["Botafogo-SP","listras",["#111111","#FFFFFF"]],
-  ["Ceará","listras",["#111111","#FFFFFF"]],
-  ["Chapecoense","faixa",["#0A5D2E","#FFFFFF"]],
-  ["Corinthians","listras",["#111111","#FFFFFF"]],
-  ["Coritiba","listras",["#0B5B33","#FFFFFF"]],
-  ["CRB","faixas",["#D32027","#FFFFFF","#111111"]],
-  ["Criciúma","listras",["#F2C200","#111111"]],
-  ["Cruzeiro","liso",["#1C3F94","#FFFFFF"]],
-  ["Cuiabá","faixa",["#006B3F","#D4A017"]],
-  ["Flamengo","faixas",["#C52613","#111111","#C52613"]],
-  ["Fluminense","listras",["#7A1128","#0C7A4B","#FFFFFF"]],
-  ["Fortaleza","faixas",["#0B3C8C","#FFFFFF","#D7262F"]],
-  ["Goiás","faixa",["#0A7A3C","#FFFFFF"]],
-  ["Grêmio","listras",["#2E7DBA","#111111","#FFFFFF"]],
-  ["Internacional","liso",["#D2232A","#FFFFFF"]],
-  ["Juventude","listras",["#0B6B3A","#FFFFFF"]],
-  ["Londrina","faixa",["#0B3C8C","#FFFFFF"]],
-  ["Mirassol","faixa",["#F4C300","#0E6E3A"]],
+  ["Athletico Paranaense","listras",["#C8102E","#111111"],"atletico-paranaense"],
+  ["Atlético Goianiense","listras",["#D32027","#111111"],"atletico-goianiense"],
+  ["Atlético Mineiro","listras",["#111111","#FFFFFF"],"atletico-mineiro"],
+  ["Avaí","listras",["#0B3C8C","#FFFFFF"],"avai"],
+  ["Bahia","faixas",["#0B3C8C","#FFFFFF","#D7262F"],"bahia"],
+  ["Botafogo","listras",["#111111","#FFFFFF"],"botafogo"],
+  ["Botafogo-SP","listras",["#111111","#FFFFFF"],"botafogo-sp"],
+  ["Ceará","listras",["#111111","#FFFFFF"],"ceara"],
+  ["Chapecoense","faixa",["#0A5D2E","#FFFFFF"],"chapecoense"],
+  ["Corinthians","listras",["#111111","#FFFFFF"],"corinthians"],
+  ["Coritiba","listras",["#0B5B33","#FFFFFF"],"coritiba"],
+  ["CRB","faixas",["#D32027","#FFFFFF","#111111"],"crb"],
+  ["Criciúma","listras",["#F2C200","#111111"],"criciuma"],
+  ["Cruzeiro","liso",["#1C3F94","#FFFFFF"],"cruzeiro"],
+  ["Cuiabá","faixa",["#006B3F","#D4A017"],"cuiaba"],
+  ["Flamengo","faixas",["#C52613","#111111","#C52613"],"flamengo"],
+  ["Fluminense","listras",["#7A1128","#0C7A4B","#FFFFFF"],"fluminense"],
+  ["Fortaleza","faixas",["#0B3C8C","#FFFFFF","#D7262F"],"fortaleza"],
+  ["Goiás","faixa",["#0A7A3C","#FFFFFF"],"goias"],
+  ["Grêmio","listras",["#2E7DBA","#111111","#FFFFFF"],"gremio"],
+  ["Guarani","faixa",["#0A6B3B","#FFFFFF"],"guarani"],
+  ["Internacional","liso",["#D2232A","#FFFFFF"],"internacional"],
+  ["Ituano","listras",["#D32027","#111111"],"ituano"],
+  ["Juventude","listras",["#0B6B3A","#FFFFFF"],"juventude"],
+  ["Londrina","faixa",["#0B3C8C","#FFFFFF"],"londrina"],
+  ["Mirassol","faixa",["#F4C300","#0E6E3A"],"mirassol"],
   ["Náutico","listras",["#D32027","#FFFFFF"]],
-  ["Novorizontino","faixa",["#0E6E3A","#F2C200"]],
+  ["Novorizontino","faixa",["#0E6E3A","#F2C200"],"gremio-novorizontino"],
   ["Operário Ferroviário","listras",["#111111","#FFFFFF"]],
-  ["Palmeiras","liso",["#006437","#FFFFFF"]],
-  ["Ponte Preta","listras",["#111111","#FFFFFF"]],
-  ["Red Bull Bragantino","faixa",["#FFFFFF","#E2232E"]],
+  ["Palmeiras","liso",["#006437","#FFFFFF"],"palmeiras"],
+  ["Ponte Preta","listras",["#111111","#FFFFFF"],"ponte-preta"],
+  ["Red Bull Bragantino","faixa",["#FFFFFF","#E2232E"],"red-bull-bragantino"],
   ["Remo","faixa",["#0A2C6B","#FFFFFF"]],
-  ["Santos","faixa",["#FFFFFF","#111111"]],
+  ["Sampaio Corrêa","faixas",["#D32027","#FFFFFF","#0A6B3B"],"sampaio-correa"],
+  ["Santos","faixa",["#FFFFFF","#111111"],"santos"],
   ["São Bernardo","faixa",["#F2C200","#0B3C8C"]],
-  ["São Paulo","faixas",["#FFFFFF","#D7262F","#111111"]],
-  ["Sport","listras",["#D32027","#111111"]],
-  ["Vasco da Gama","diagonal",["#111111","#FFFFFF"]],
-  ["Vila Nova","listras",["#D32027","#FFFFFF"]],
-  ["Vitória","listras",["#D32027","#111111"]],
-].map(([n, p, c]) => ({ n, p, c })).sort((a, b) => a.n.localeCompare(b.n, "pt-BR"));
+  ["São Paulo","faixas",["#FFFFFF","#D7262F","#111111"],"sao-paulo"],
+  ["Sport","listras",["#D32027","#111111"],"sport-recife"],
+  ["Tombense","faixa",["#0A6B3B","#FFFFFF"],"tombense"],
+  ["Vasco da Gama","diagonal",["#111111","#FFFFFF"],"vasco-da-gama"],
+  ["Vila Nova","listras",["#D32027","#FFFFFF"],"vila-nova"],
+  ["Vitória","listras",["#D32027","#111111"],"vitoria"],
+].map(([n, p, c, f]) => ({ n, p, c, f: f || "" })).sort((a, b) => a.n.localeCompare(b.n, "pt-BR"));
 // aceita o que já estava escrito à mão ("Santos Futebol Clube", "Vasco", "Inter"…)
 const achaTime = nome => {
   const q = semAc(nome); if(!q) return null;
@@ -199,6 +205,12 @@ const achaTime = nome => {
 const claro = hex => { const n = parseInt(String(hex).slice(1), 16); return (((n >> 16) & 255) * 299 + ((n >> 8) & 255) * 587 + (n & 255) * 114) / 1000 > 190; };
 // cor que funciona como destaque (evita branco puro)
 const corTime = t => t ? (claro(t.c[0]) ? (t.c[1] && !claro(t.c[1]) ? t.c[1] : "#5E0810") : t.c[0]) : "";
+// escudo do time: imagem enviada pela loja; sem imagem, cai no brasão desenhado
+function escudo(t, tam){
+  if(!t) return "";
+  if(t.f) return `<img class="lj-escudo img" src="escudos/${t.f}.png?v=1" width="${tam||96}" height="${tam||96}" alt="Escudo do ${esc(t.n)}" loading="lazy">`;
+  return escudoSVG(t, tam);
+}
 function escudoSVG(t, tam){
   if(!t) return "";
   const [a, b, c] = [t.c[0], t.c[1] || t.c[0], t.c[2] || t.c[0]];
@@ -546,7 +558,7 @@ async function abrirConta(destaque){
         ${c.tamanho ? `<span class="lj-tag">Veste ${esc(c.tamanho)}</span>` : ""}
         ${c.time_coracao ? `<span class="lj-tag time">${esc(c.time_coracao)}</span>` : `<button type="button" class="lj-link" id="ljEscolheTime">Escolher meu time do coração</button>`}
       </div>
-      ${tm ? `<div class="lj-ficha-escudo">${escudoSVG(tm, 104)}<small>${esc(tm.n)}</small></div>` : ""}
+      ${tm ? `<div class="lj-ficha-escudo">${escudo(tm, 104)}<small>${esc(tm.n)}</small></div>` : ""}
     </div>
     ${(ass || []).map(a => `<div class="lj-ped"><div class="r" style="display:flex;justify-content:space-between;gap:8px"><span class="t">Box Retrô · assinatura</span><span class="lj-chip ${AS_ST[a.status][1]}">${AS_ST[a.status][0]}</span></div>
       <div class="d">Tam. ${esc(a.tamanho)}${a.time_coracao ? " · " + esc(a.time_coracao) : ""} · ${brl(a.valor)}/mês${a.inicio ? " · desde " + dBR(a.inicio + "T12:00") : ""}</div>
