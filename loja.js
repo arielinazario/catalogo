@@ -10,7 +10,16 @@ const SB_KEY = "sb_publishable_WdqvGyQJQ8taq_kS6TIgKw_QbGNCUVe";
 const SITE = location.origin + location.pathname;
 // Depois de confirmar o e-mail, o Supabase devolve a pessoa com #...&type=signup no endereço.
 // É preciso ler isso ANTES de criar o cliente, que limpa o endereço.
-const TIPO_RETORNO = (location.hash.match(/[#&]type=([a-z_]+)/) || [])[1] || "";
+const HASH0 = location.hash;
+const TIPO_RETORNO = (HASH0.match(/[#&]type=([a-z_]+)/) || [])[1] || "";
+const ERRO_LINK = /[#&]error/.test(HASH0)
+  ? decodeURIComponent(((HASH0.match(/error_description=([^&]*)/) || [])[1] || "").replace(/\+/g, " ")) || "Link inválido"
+  : "";
+// Os links de e-mail chegavam com DOIS "#" (ex.: #nova-senha#access_token=...), porque o redirectTo
+// já levava um fragmento. Assim a biblioteca não achava o token e a sessão nunca era criada.
+// Aqui a parte antiga é descartada antes de o cliente ler o endereço.
+const iTok = HASH0.search(/#(access_token|error|code)=/);
+if(iTok > 0) try { history.replaceState(null, "", location.pathname + location.search + HASH0.slice(iTok)); } catch(e){}
 // identificação da loja (Decreto 7.962/2013)
 const LOJA_ID = "Ariéli Nazário · CPF 113.881.769-47 · Criciúma/SC · WhatsApp (48) 99124-5814 · Instagram @arielinazario";
 if(!window.supabase || !window.supabase.createClient){
@@ -129,6 +138,7 @@ function abrirLogin(modo, depois){
     <div class="note" style="margin-top:0">${modo === "criar" ? "Com a conta você compra direto pelo site e acompanha todos os seus pedidos." : "Entre para finalizar a compra e acompanhar seus pedidos."}</div>`}
     <span class="lbl">E-mail</span><input class="in" id="ljEmail" type="email" autocomplete="email" inputmode="email" placeholder="seuemail@exemplo.com" style="text-transform:none">
     ${modo === "senha" ? `<div class="note">Enviaremos um link para você criar uma senha nova.</div>` : `<span class="lbl">Senha</span><input class="in" id="ljSenha" type="password" autocomplete="${modo==="criar"?"new-password":"current-password"}" placeholder="${modo==="criar"?"Mínimo de 8 caracteres":"Sua senha"}" style="text-transform:none">`}
+    ${modo === "criar" ? `<span class="lbl">Repita a senha</span><input class="in" id="ljSenha2" type="password" autocomplete="new-password" placeholder="Digite a senha de novo" style="text-transform:none">` : ""}
     ${modo === "criar" ? `<label class="lj-chk"><input type="checkbox" id="ljTermos"><span>Concordo que a NAZA guarde meus dados (nome, contato e endereço) para entregar meus pedidos e falar comigo sobre eles.</span></label>` : ""}
     <div class="lj-err"></div><div class="lj-sp"></div>
     <button type="button" class="btn pri" id="ljGo">${modo === "criar" ? "Criar minha conta" : modo === "senha" ? "Enviar link" : "Entrar"}</button>
@@ -140,13 +150,14 @@ function abrirLogin(modo, depois){
     ocupado(e.currentTarget, true);
     try {
       if(modo === "senha"){
-        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: SITE + "#nova-senha" });
+        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: SITE });
         if(error) throw error; erro(""); toast("Se o e-mail tiver conta, o link chega em instantes."); closeSheet(); return;
       }
       if(senha.length < (modo === "criar" ? 8 : 1)) throw new Error("A senha precisa ter pelo menos 8 caracteres.");
       if(modo === "criar"){
+        if(senha !== ((document.getElementById("ljSenha2") || {}).value || "")) throw new Error("As duas senhas não são iguais. Confira e tente de novo.");
         if(!document.getElementById("ljTermos").checked) throw new Error("Marque a concordância para criar a conta.");
-        const { data, error } = await sb.auth.signUp({ email, password: senha, options: { emailRedirectTo: SITE + "#minha-conta" } });
+        const { data, error } = await sb.auth.signUp({ email, password: senha, options: { emailRedirectTo: SITE } });
         if(error) throw error;
         if(!data.session){ closeSheet(); openSheet("Confirme seu e-mail", `<p>Enviamos um link de confirmação para <b>${esc(email)}</b>. Abra o e-mail, toque no link e depois volte aqui para entrar.</p><div class="note">Não chegou? Confira a caixa de spam.</div><div class="lj-sp"></div><button type="button" class="btn ghost" data-close>Ok</button>`); return; }
       } else {
@@ -180,16 +191,34 @@ function avisoConfirmado(tipo){
     perfilOk(cli) ? abrirConta() : abrirDados(() => abrirConta());
   });
 }
+let telaNovaSenha = false;
 function abrirNovaSenha(){
-  openSheet("Criar nova senha", `<span class="lbl">Nova senha</span><input class="in" id="ljNova" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" style="text-transform:none">
+  if(telaNovaSenha) return; telaNovaSenha = true;
+  openSheet("Criar nova senha", `
+    <div class="note" style="margin-top:0">Escolha a senha que você vai usar para entrar na NAZA.</div>
+    <span class="lbl">Nova senha</span><input class="in" id="ljNova" type="password" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" style="text-transform:none">
+    <span class="lbl">Repita a nova senha</span><input class="in" id="ljNova2" type="password" autocomplete="new-password" placeholder="Digite de novo" style="text-transform:none">
     <div class="lj-err"></div><div class="lj-sp"></div><button type="button" class="btn pri" id="ljSalvaSenha">Salvar senha</button>`);
   document.getElementById("ljSalvaSenha").addEventListener("click", async e => {
-    const s = val("ljNova"); if(s.length < 8) return erro("A senha precisa ter pelo menos 8 caracteres.");
+    const s = val("ljNova"), s2 = val("ljNova2");
+    if(s.length < 8) return erro("A senha precisa ter pelo menos 8 caracteres.");
+    if(s !== s2) return erro("As duas senhas não são iguais. Confira e tente de novo.");
     ocupado(e.currentTarget, true);
     const { error } = await sb.auth.updateUser({ password: s });
-    if(error){ ocupado(e.currentTarget, false); return erro(traduz(error)); }
+    if(error){ ocupado(e.currentTarget, false); return erro(/session|jwt|token/i.test(String(error.message)) ? "O link expirou. Peça um novo em Entrar > Esqueci minha senha." : traduz(error)); }
+    telaNovaSenha = false;
     history.replaceState(null, "", location.pathname); toast("Senha alterada."); abrirConta();
   });
+}
+function avisoLinkInvalido(msg){
+  if(location.hash) history.replaceState(null, "", location.pathname + location.search);
+  openSheet("Link expirado", `
+    <p style="margin-top:0">Esse link de e-mail não vale mais${/expired/i.test(msg) ? " (eles valem por pouco tempo)" : ""}. Peça um novo que chega na hora.</p>
+    <div class="lj-sp"></div>
+    <button type="button" class="btn pri" id="ljNovoLink">Pedir novo link de senha</button>
+    <div style="height:8px"></div>
+    <button type="button" class="btn ghost" data-close>Fechar</button>`);
+  document.getElementById("ljNovoLink").addEventListener("click", () => abrirLogin("senha"));
 }
 
 /* ---------- meus dados (endereço de entrega) ---------- */
@@ -533,7 +562,11 @@ sb.auth.onAuthStateChange((ev, session) => {
   user = session ? session.user : null; atualizarBotao();
   if(user){ try { await carregarCliente(); } catch(e){} }
   render();
-  if(TIPO_RETORNO === "signup" || TIPO_RETORNO === "email_change") avisoConfirmado(TIPO_RETORNO);
+  if(ERRO_LINK) avisoLinkInvalido(ERRO_LINK);
+  else if(TIPO_RETORNO === "recovery" || location.hash === "#nova-senha"){
+    if(user) abrirNovaSenha(); else avisoLinkInvalido("expired");
+  }
+  else if(TIPO_RETORNO === "signup" || TIPO_RETORNO === "email_change") avisoConfirmado(TIPO_RETORNO);
   else rota();
 })();
 window.addEventListener("hashchange", rota);
