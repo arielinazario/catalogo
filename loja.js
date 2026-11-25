@@ -21,7 +21,7 @@ const ERRO_LINK = /[#&]error/.test(HASH0)
 const iTok = HASH0.search(/#(access_token|error|code)=/);
 if(iTok > 0) try { history.replaceState(null, "", location.pathname + location.search + HASH0.slice(iTok)); } catch(e){}
 // identificação da loja (Decreto 7.962/2013)
-const LOJA_ID = "Ariéli Nazário · CPF 113.881.769-47 · Criciúma/SC · WhatsApp (48) 99124-5814 · Instagram @arielinazario";
+const LOJA_ID = "Ariéli Nazário · CPF 113.881.769-47 · Criciúma/SC · WhatsApp (48) 99124-5814 · Instagram @nazacamisas";
 if(!window.supabase || !window.supabase.createClient){
   console.warn("Supabase não carregou; loja online desativada.");
   const ta = document.getElementById("topActs");
